@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL Framework", "OpenGL Framework.vcxproj", "{F1CEE8A8-86A5-4EC9-8D31-A7E529EE4363}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nyah", "..\Nyah\Nyah.vcxproj", "{DE49572F-D967-410B-B619-4E9D7E1D189D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
