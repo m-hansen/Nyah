@@ -127,7 +127,7 @@
     <ClInclude Include="..\..\..\..\..\..\Software Engineering I\Software\OpenGL Framework\InputManager.h" />
     <ClInclude Include="..\..\..\..\..\..\Software Engineering I\Software\OpenGL Framework\inputmapper.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Nyah.h" />
+    <ClInclude Include="openGLFramework.h" />
     <ClInclude Include="openGLStuff.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="ShapeDraw.h" />
