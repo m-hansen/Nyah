@@ -43,6 +43,9 @@
     <ClCompile Include="stateManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -103,6 +106,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="collInfo.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="BallManager.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="FieldManager.cpp" />
     <ClCompile Include="game.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="ball.h" />
     <ClInclude Include="BallManager.h" />
     <ClInclude Include="baseTypes.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="collInfo.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="FieldManager.h" />
