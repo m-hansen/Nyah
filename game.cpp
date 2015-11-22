@@ -21,7 +21,7 @@
 #include "BallManager.h"
 #include "FieldManager.h"
 #include "InputManager.h"
-#include "SpriteDemoManager.h"
+#include "SpriteManager.h"
 
 // Declarations
 const char8_t CGame::mGameTitle[]="Framework1";
@@ -40,19 +40,19 @@ void CGame::init()
 	StateManagerC::CreateInstance();
 	FieldManagerC::CreateInstance();
 	InputManagerC::CreateInstance();
-	SpriteDemoManagerC::CreateInstance();
+	SpriteManagerC::CreateInstance();
 
 	InputManagerC::GetInstance()->init();
 
 	BallManagerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::HALF_BALLS_FILLED);
 	FieldManagerC::GetInstance()->init();
-	SpriteDemoManagerC::GetInstance()->init(28,26);
+	SpriteManagerC::GetInstance()->init();
 }
 void CGame::UpdateFrame(DWORD milliseconds)			
 {
 	keyProcess();
-	SpriteDemoManagerC::GetInstance()->updateSprites(milliseconds);
+	SpriteManagerC::GetInstance()->updateSprites(milliseconds);
 	BallManagerC::GetInstance()->updateBalls(milliseconds);
 //	InputManagerC::GetInstance()->update(milliseconds);
 }
@@ -60,7 +60,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 void CGame::DrawScene(void)											
 {
 	startOpenGLDrawing();
-	SpriteDemoManagerC::GetInstance()->renderSprites();
+	SpriteManagerC::GetInstance()->renderBackground();
 	BallManagerC::GetInstance()->renderBalls();
 	FieldManagerC::GetInstance()->renderField();
 }
@@ -76,7 +76,7 @@ void CGame::shutdown()
 	BallManagerC::GetInstance()->shutdown();
 	StateManagerC::GetInstance()->shutdown();
 	FieldManagerC::GetInstance()->shutdown();
-	SpriteDemoManagerC::GetInstance()->shutdown();
+	//SpriteManagerC::GetInstance()->shutdown();
 }
 void CGame::DestroyGame(void)
 {

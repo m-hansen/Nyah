@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="field.cpp">
-      <Filter>Header</Filter>
-    </ClCompile>
     <ClCompile Include="ball.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -37,10 +34,19 @@
     <ClCompile Include="ShapeDraw.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteDemoManager.cpp">
+    <ClCompile Include="stateManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="stateManager.cpp">
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="field.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,9 +99,6 @@
     <ClInclude Include="SOIL.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteDemoManager.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="stateManager.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -103,6 +106,15 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="collInfo.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

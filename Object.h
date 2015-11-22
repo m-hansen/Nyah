@@ -1,8 +1,10 @@
 class BallC;
+class BulletC;
 class FieldC;
 class ObjectC
 {
     friend class BallC;
+	friend class BulletC;
 	friend class FieldC;
 public:
     ObjectC(float initPosX, float initPosY, float initVelX, float initVelY);

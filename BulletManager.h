@@ -1,23 +1,23 @@
 struct VertexFormatPos3Tex2
 {   // Custom vertex format for position+normal
-	float tu , tv ;             ///< texture coordinates	
-	float px , py , pz ;        ///< untransformed (world-space) position
+	float tu, tv;             ///< texture coordinates	
+	float px, py, pz;        ///< untransformed (world-space) position
 };
 
-	class SpriteDemoManagerC
+class BulletManagerC
 {
 public:
-	static SpriteDemoManagerC	*CreateInstance();
-	static SpriteDemoManagerC	*GetInstance() {return sInstance;};
-	~SpriteDemoManagerC(){};
+	static BulletManagerC	*CreateInstance();
+	static BulletManagerC	*GetInstance() { return sInstance; };
+	~BulletManagerC() {};
 
-	void		init(int width, int height);
-	void		updateSprites(DWORD milliseconds);
-	void		renderSprites();
-	void		shutdown();
+	void	init();
+	void	updateSprites(DWORD milliseconds);
+	void	renderSprites();
+	void	shutdown();
 
-	int			getWidth() {return mWidth;}
-	int			getHeight() {return mHeight;}
+	int		getWidth() { return mWidth; }
+	int		getHeight() { return mHeight; }
 
 
 	void	setMood(int x, int y, int mood);
@@ -29,8 +29,8 @@ public:
 	int		getSpriteID(int x, int y);
 
 private:
-	static SpriteDemoManagerC *sInstance;
-	SpriteDemoManagerC(){};
+	static BulletManagerC *sInstance;
+	BulletManagerC() {};
 	void randomizeSprites();
 
 	GLuint mSpriteTextureMap;

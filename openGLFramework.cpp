@@ -39,7 +39,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 	glLoadIdentity ();													// Reset The Projection Matrix
 
 	// Define the dimensions of the Orthographic Viewing Volume
-	glOrtho(-2000.0, 2000.0, -2000.0, 2000.0, -800.0, 800.0);
+	glOrtho(-2048.0, 2048.0, -2048.0, 2048.0, -800.0, 800.0);
 
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
