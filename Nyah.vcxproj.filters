@@ -49,6 +49,9 @@
     <ClCompile Include="field.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.h">
@@ -111,12 +114,15 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="BulletManager.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="SpriteManager.h">
       <Filter>Header</Filter>
     </ClInclude>
+=======
+>>>>>>> d8cbc8b8bc4f9d030cce961e8fbf530674f3811b
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
