@@ -8,9 +8,10 @@
 #include "baseTypes.h"
 #include "ShapeDraw.h"
 #include "collInfo.h"
-#include "Object.h"
+#include "object.h"
 //#include "inputmapper.h"
-#include "Bullet.h"
+#include "SpriteManager.h"
+#include "bullet.h"
 #include "field.h"
 #include "fieldmanager.h"
 #include "gamedefs.h"
@@ -19,15 +20,28 @@
 #include "stateManager.h"
 #include "inputmanager.h"
 
-BulletC::BulletC(float initPosX, float initPosY, float initVelX, float initVelY, int id)
+BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius)
 {
 
 	mPosition.x = initPosX;
 	mPosition.y = initPosY;
 	mVelocity.x = initVelX;
 	mVelocity.y = initVelY;
+	mRadius = radius;
+	animationFrameNo = 0;
 
 }
+
+BulletC::BulletC()
+{
+	mPosition.x = 0.0f;
+	mPosition.y = 0.0f;
+	mVelocity.x = 1.0f;
+	mVelocity.y = 1.0f;
+	mRadius = 20.0f;
+	animationFrameNo = 0;
+
+};
 
 BulletC::~BulletC()
 {
@@ -43,6 +57,7 @@ void BulletC::update(DWORD milliseconds)
 {
 	move();
 	doCollisions();
+	updateAnimationFrame(milliseconds);
 }
 
 void BulletC::doCollisions()
@@ -52,6 +67,24 @@ void BulletC::doCollisions()
 
 void BulletC::render()
 {
+	GLfloat left = mPosition.x;
+	GLfloat right = mPosition.x + (mRadius * 2.0f);
+	GLfloat top = mPosition.y;
+	GLfloat bottom = mPosition.y + (mRadius * 2.0f);
+	SpriteManagerC::GetInstance()->renderBullet(animationFrameNo, left, right, top, bottom);
+}
 
+void BulletC::updateAnimationFrame(DWORD milliseconds)
+{
+	mCurrentTime += milliseconds;
+
+	if (mCurrentTime - mLastUpdateTime > ANIMATION_FRAME_UPDATE_DELTA_TIME)
+	{
+		mLastUpdateTime = mCurrentTime;
+		if (animationFrameNo < 7)
+			animationFrameNo++;
+		else
+			animationFrameNo = 0;
+	}
 }
 

@@ -1,9 +1,9 @@
-class BallC;
+//class BallC;
 class BulletC;
 class FieldC;
 class ObjectC
 {
-    friend class BallC;
+    //friend class BallC;
 	friend class BulletC;
 	friend class FieldC;
 public:

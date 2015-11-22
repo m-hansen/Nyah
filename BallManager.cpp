@@ -35,7 +35,7 @@ void BallManagerC::init()
     {
 		ballPtrs[i] = new BallC(0.0f, 0.0f,getRangedRandom(-30.0f,30.0f),getRangedRandom(-30.0f,30.0f),i);
 		ballPtrs[i]->setRandomColor();
-        ballPtrs[i]->setRadius(getRangedRandom(10.0f,150.0f));
+        //ballPtrs[i]->setRadius(getRangedRandom(10.0f,150.0f));
         ballPtrs[i]->enable();
 		ballPtrs[i]->setID(i);
     }

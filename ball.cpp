@@ -28,16 +28,16 @@ void BallC::moveUp()
 BallC::BallC(float initPosX,float initPosY,float initVelX,float initVelY,int id)
 {
 
-	mPosition.x = initPosX;
+	/*mPosition.x = initPosX;
 	mPosition.y = initPosY;
 	mVelocity.x = initVelX;
-	mVelocity.y = initVelY;
+	mVelocity.y = initVelY;*/
 
 }
 BallC::BallC()
 {
     mEnabled = true;
-    mCollInfo.shape = CollInfoC::SHAPE_CIRCLE;
+    //mCollInfo.shape = CollInfoC::SHAPE_CIRCLE;
 
 };
 BallC::~BallC()
@@ -46,8 +46,8 @@ BallC::~BallC()
 
 void BallC::update(DWORD milliseconds)
 {
-    mPosition.x += mVelocity.x*milliseconds/10;
-    mPosition.y += mVelocity.y*milliseconds/10;
+    //mPosition.x += mVelocity.x*milliseconds/10;
+    //mPosition.y += mVelocity.y*milliseconds/10;
 
 	DoCollisions();
 }
@@ -64,7 +64,7 @@ void BallC::CollideField(void)
 	float_t topSide = field->getPosition()->y+((float_t)field->getHeight()/2.0f);
 	float_t bottomSide = field->getPosition()->y-((float_t)field->getHeight()/2.0f);
 	
-	if(mPosition.x- mRadius <= leftSide  )
+	/*if(mPosition.x- mRadius <= leftSide  )
 	{
 		mVelocity.x = -mVelocity.x;
 		mPosition.x = leftSide + mRadius;
@@ -87,7 +87,7 @@ void BallC::CollideField(void)
 		mVelocity.y = -mVelocity.y;
 		mPosition.y = topSide - mRadius;
 		setRandomColor();
-	}
+	}*/
 };
 void BallC::render()
 {
@@ -96,7 +96,7 @@ void BallC::render()
 	char8_t blue = (char8_t)((mBallColor>>0) & 0xFF);
 	bool filledVal;
 
-	switch(StateManagerC::GetInstance()->getState())
+	/*switch(StateManagerC::GetInstance()->getState())
 	{
 		case StateManagerC::ALL_BALLS_FILLED:
 			filledVal = true;
@@ -108,7 +108,7 @@ void BallC::render()
 			filledVal = false;
 			break;
 	}
-	DrawCircle(mRadius,mPosition.x,mPosition.y,red,green,blue,filledVal);
+	DrawCircle(mRadius,mPosition.x,mPosition.y,red,green,blue,filledVal);*/
 }
 void BallC::setRandomColor()
 {

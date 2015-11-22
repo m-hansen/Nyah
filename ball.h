@@ -11,7 +11,7 @@ public:
 	void DoCollisions();
     void disable() {mEnabled = false;};
     void enable() {mEnabled = true;};
-    void setRadius(float radius) {mCollInfo.param1 = radius;mRadius = radius;};
+    //void setRadius(float radius) {mCollInfo.param1 = radius;mRadius = radius;};
 	void setRandomColor();
 	void reduceVelocity(float_t factor);
 	void moveUp();

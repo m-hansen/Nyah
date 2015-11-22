@@ -7,8 +7,7 @@ public:
 
 	void init();
 	void renderBackground();
-	void renderBullet();
-	void updateSprites(DWORD milliseconds);
+	void renderBullet(GLint animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom);
 
 private:
 	static SpriteManagerC *sInstance;
@@ -17,9 +16,4 @@ private:
 	GLuint mBulletSpriteTexture;
 	GLuint mBackgroundTexture;
 	GLuint mPlayerSpriteTexture;
-
-	DWORD mLastUpdateTime;
-	DWORD mCurrentTime;
 };
-
-#define MOOD_UPDATE_DELTA_TIME 100

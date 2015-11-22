@@ -1,4 +1,3 @@
-#pragma once
 #define STATE_MANAGER_CPP
 #include <windows.h>											// Header File For Windows
 #include <stdio.h>												// Header File For Standard Input / Output
@@ -61,24 +60,33 @@ void SpriteManagerC::renderBackground()
 	glEnd ();
 }
 
-void SpriteManagerC::renderBullet()
+void SpriteManagerC::renderBullet(int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom)
 {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, mBulletSpriteTexture);
+	glBegin(GL_QUADS);
 
-}
-
-void SpriteManagerC::updateSprites(DWORD milliseconds)
-{
-	/*mCurrentTime += milliseconds;
-
-	if (mCurrentTime - mLastUpdateTime > MOOD_UPDATE_DELTA_TIME)
+	GLfloat u, v;
+	if (animationFrameNo > 7)
 	{
-		int numberToUpdate = getRangedRandom((mWidth*mHeight) / 20, ((mWidth*mHeight) / 20) + 20);
-		mLastUpdateTime = mCurrentTime;
-		for (int i = 0; i < numberToUpdate; ++i)
-		{
-			int x = getRangedRandom(0, mWidth - 1);
-			int y = getRangedRandom(0, mHeight - 1);
-			setMood(x, y, getRangedRandom(0, 3));
-		}
-	}*/
+		animationFrameNo -= 8;
+		v = 0.0;
+	}
+	else
+	{
+		v = 0.5;
+	}
+	u = animationFrameNo * (1.0/8.0);
+
+	glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+	glTexCoord2f(u, v);
+	glVertex3f(left, top, 0.0);
+	glTexCoord2f(u + (1.0/8.0), v);
+	glVertex3f(right,top, 0.0);
+	glTexCoord2f(u + (1.0/8.0), v + (1.0/2.0));
+	glVertex3f(right, bottom, 0.0);
+	glTexCoord2f(u, v + (1.0/2.0));
+	glVertex3f(left, bottom, 0.0);
+
+	glEnd();
 }

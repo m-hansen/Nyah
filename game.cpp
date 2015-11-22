@@ -22,6 +22,7 @@
 #include "FieldManager.h"
 #include "InputManager.h"
 #include "SpriteManager.h"
+#include "BulletManager.h"
 
 // Declarations
 const char8_t CGame::mGameTitle[]="Framework1";
@@ -36,15 +37,17 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any OpenGL Initialization
 
 void CGame::init()
 {
-	BallManagerC::CreateInstance();
+	//BallManagerC::CreateInstance();
 	StateManagerC::CreateInstance();
 	FieldManagerC::CreateInstance();
 	InputManagerC::CreateInstance();
 	SpriteManagerC::CreateInstance();
+	BulletManagerC::CreateInstance();
 
 	InputManagerC::GetInstance()->init();
 
-	BallManagerC::GetInstance()->init();
+	//BallManagerC::GetInstance()->init();
+	BulletManagerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::HALF_BALLS_FILLED);
 	FieldManagerC::GetInstance()->init();
 	SpriteManagerC::GetInstance()->init();
@@ -52,8 +55,9 @@ void CGame::init()
 void CGame::UpdateFrame(DWORD milliseconds)			
 {
 	keyProcess();
-	SpriteManagerC::GetInstance()->updateSprites(milliseconds);
-	BallManagerC::GetInstance()->updateBalls(milliseconds);
+	//SpriteManagerC::GetInstance()->updateSprites(milliseconds);
+	BulletManagerC::GetInstance()->updateBullets(milliseconds);
+	//BallManagerC::GetInstance()->updateBalls(milliseconds);
 //	InputManagerC::GetInstance()->update(milliseconds);
 }
 
@@ -61,7 +65,8 @@ void CGame::DrawScene(void)
 {
 	startOpenGLDrawing();
 	SpriteManagerC::GetInstance()->renderBackground();
-	BallManagerC::GetInstance()->renderBalls();
+	//BallManagerC::GetInstance()->renderBalls();
+	BulletManagerC::GetInstance()->renderSprites();
 	FieldManagerC::GetInstance()->renderField();
 }
 
@@ -73,9 +78,10 @@ CGame *CGame::CreateInstance()
 }
 void CGame::shutdown()
 {
-	BallManagerC::GetInstance()->shutdown();
+	//BallManagerC::GetInstance()->shutdown();
 	StateManagerC::GetInstance()->shutdown();
 	FieldManagerC::GetInstance()->shutdown();
+	BulletManagerC::GetInstance()->shutdown();
 	//SpriteManagerC::GetInstance()->shutdown();
 }
 void CGame::DestroyGame(void)
@@ -83,4 +89,5 @@ void CGame::DestroyGame(void)
 	delete BallManagerC::GetInstance();	
 	delete StateManagerC::GetInstance();	
 	delete FieldManagerC::GetInstance();	
+	delete SpriteManagerC::GetInstance();
 }
