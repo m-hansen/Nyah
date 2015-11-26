@@ -1,5 +1,4 @@
 #include <stdlib.h>
-
 #include "random.h"
 float getRangedRandom(float min, float max)
 {

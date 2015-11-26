@@ -1,3 +1,4 @@
+class BulletWaveC;
 class BulletManagerC
 {
 public:
@@ -6,7 +7,7 @@ public:
 	~BulletManagerC() {};
 
 	void	init();
-	void	spawnWave();
+	void	spawnBulletWave();
 	void	updateBullets(DWORD milliseconds);
 	void	renderSprites();
 	void	shutdown();
@@ -15,6 +16,12 @@ private:
 	static BulletManagerC *sInstance;
 	BulletManagerC() {};
 
-	BulletC **bulletPtrs;
-	static const int32_t NUM_BULLETS = 48;
+	BulletWaveC **bulletWavePtrs;
+	static const int32_t MAX_NUM_WAVES = 7;
+	int32_t TIME_BETWEEN_WAVES;
+
+	DWORD mLastSpawnTime;
+	DWORD mLastSpeedIncreaseTime;
+	DWORD mCurrentTime;
 };
+#define INCREASE_SPAWN_SPEED_DELTA_TIME 5000

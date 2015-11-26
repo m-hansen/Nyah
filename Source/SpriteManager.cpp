@@ -29,7 +29,7 @@ SpriteManagerC *SpriteManagerC::CreateInstance()
 void SpriteManagerC::init()
 {
 	/* load an image file directly as a new OpenGL texture */
-	mBulletSpriteTexture = SOIL_load_OGL_texture("Sprites/bullet.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+	mBulletSpriteTexture = SOIL_load_OGL_texture("Sprites/bullets2.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 
 	mBackgroundTexture = SOIL_load_OGL_texture("Sprites/spacebg.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
@@ -60,32 +60,36 @@ void SpriteManagerC::renderBackground()
 	glEnd ();
 }
 
-void SpriteManagerC::renderBullet(int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom)
+void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius)
 {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, mBulletSpriteTexture);
 	glBegin(GL_QUADS);
 
 	GLfloat u, v;
-	if (animationFrameNo > 7)
+	if (color == RED)
 	{
-		animationFrameNo -= 8;
-		v = 0.0;
+		v = 0.75;
 	}
-	else
+	else if(color == BLUE)
 	{
-		v = 0.5;
+		v = 0.25;
 	}
 	u = animationFrameNo * (1.0/8.0);
+
+	left -= radius;
+	right -= radius;
+	top -= radius;
+	bottom -= radius;
 
 	glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
 	glTexCoord2f(u, v);
 	glVertex3f(left, top, 0.0);
 	glTexCoord2f(u + (1.0/8.0), v);
 	glVertex3f(right,top, 0.0);
-	glTexCoord2f(u + (1.0/8.0), v + (1.0/2.0));
+	glTexCoord2f(u + (1.0/8.0), v + (1.0/4.0));
 	glVertex3f(right, bottom, 0.0);
-	glTexCoord2f(u, v + (1.0/2.0));
+	glTexCoord2f(u, v + (1.0/4.0));
 	glVertex3f(left, bottom, 0.0);
 
 	glEnd();

@@ -49,6 +49,9 @@
     <ClCompile Include="Source\stateManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="BulletWave.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\ball.h">
@@ -118,6 +121,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="gl\glut.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletWave.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

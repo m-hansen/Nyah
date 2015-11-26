@@ -100,6 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletWave.cpp" />
     <ClCompile Include="Source\ball.cpp" />
     <ClCompile Include="Source\BallManager.cpp" />
     <ClCompile Include="Source\Bullet.cpp" />
@@ -118,6 +119,7 @@
     <ClCompile Include="Source\stateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletWave.h" />
     <ClInclude Include="gl\glut.h" />
     <ClInclude Include="Header\ball.h" />
     <ClInclude Include="Header\BallManager.h" />

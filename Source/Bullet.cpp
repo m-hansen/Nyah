@@ -20,7 +20,7 @@
 #include "stateManager.h"
 #include "inputmanager.h"
 
-BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius)
+BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color)
 {
 
 	mPosition.x = initPosX;
@@ -29,17 +29,21 @@ BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t i
 	mVelocity.y = initVelY;
 	mRadius = radius;
 	animationFrameNo = 0;
+	isAtCenter = false;
+	mColor = color;
 
 }
 
 BulletC::BulletC()
 {
+
 	mPosition.x = 0.0f;
 	mPosition.y = 0.0f;
 	mVelocity.x = 1.0f;
 	mVelocity.y = 1.0f;
 	mRadius = 20.0f;
 	animationFrameNo = 0;
+	isAtCenter = false;
 
 };
 
@@ -62,7 +66,16 @@ void BulletC::update(DWORD milliseconds)
 
 void BulletC::doCollisions()
 {
+	if (mPosition.x < THRESHOLD && mPosition.x > -THRESHOLD
+		&& mPosition.y < THRESHOLD && mPosition.y > -THRESHOLD)
+	{
+		isAtCenter = true;
+	}
+}
 
+bool8_t BulletC::getIsAtCenter()
+{
+	return isAtCenter;
 }
 
 void BulletC::render()
@@ -71,7 +84,7 @@ void BulletC::render()
 	GLfloat right = mPosition.x + (mRadius * 2.0f);
 	GLfloat top = mPosition.y;
 	GLfloat bottom = mPosition.y + (mRadius * 2.0f);
-	SpriteManagerC::GetInstance()->renderBullet(animationFrameNo, left, right, top, bottom);
+	SpriteManagerC::GetInstance()->renderBullet(mColor, animationFrameNo, left, right, top, bottom, mRadius);
 }
 
 void BulletC::updateAnimationFrame(DWORD milliseconds)

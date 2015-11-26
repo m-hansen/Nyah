@@ -11,7 +11,7 @@
 #include "gamedefs.h"
 #include "collinfo.h"
 #include "object.h"
-#include "Bullet.h"
+#include "BulletWave.h"
 #include "BulletManager.h"
 #include "random.h"
 
@@ -28,38 +28,69 @@ BulletManagerC *BulletManagerC::CreateInstance()
 
 void BulletManagerC::init()
 {
-	float_t x, y, theta;
-	bulletPtrs = (BulletC**)malloc(NUM_BULLETS * sizeof(BulletC*));
-	for (int i = 0; i < NUM_BULLETS; i++)
+	TIME_BETWEEN_WAVES = 1500;
+	bulletWavePtrs = (BulletWaveC**)malloc(MAX_NUM_WAVES * sizeof(BulletWaveC*));
+	for (int i = 0; i < MAX_NUM_WAVES; i++)
 	{
-		theta = ((i * 7.5) * 3.14159f) / 180.0f;
-		x = 1600.0f * cos(theta);
-		y = 1600.0f * sin(theta);
-		bulletPtrs[i] = new BulletC(x, y, -1.0f * cos(theta), -1.0f * sin(theta), 100.0f);
+		bulletWavePtrs[i] = NULL;
+	}
+}
+
+void BulletManagerC::spawnBulletWave()
+{
+	for (int i = 0; i < MAX_NUM_WAVES; i++)
+	{
+		if (bulletWavePtrs[i] == NULL)
+		{
+			bulletWavePtrs[i] = new BulletWaveC();
+			break;
+		}
 	}
 }
 
 void BulletManagerC::shutdown()
 {
-	for (uint32_t i = 0; i<NUM_BULLETS; ++i)
+	for (uint32_t i = 0; i< MAX_NUM_WAVES; ++i)
 	{
-		delete bulletPtrs[i];
+		if (bulletWavePtrs[i] != NULL)
+			delete bulletWavePtrs[i];
 	}
-	free(bulletPtrs);
+	free(bulletWavePtrs);
 }
 
 void BulletManagerC::renderSprites()
 {
-	for (uint32_t i = 0; i<NUM_BULLETS; ++i)
+	for (uint32_t i = 0; i< MAX_NUM_WAVES; ++i)
 	{
-		bulletPtrs[i]->render();
+		if(bulletWavePtrs[i] != NULL)
+			bulletWavePtrs[i]->render();
 	}
 }
 
 void BulletManagerC::updateBullets(DWORD milliseconds)
 {
-	for (uint32_t i = 0; i<NUM_BULLETS; ++i)
+	mCurrentTime += milliseconds;
+	if (mCurrentTime - mLastSpawnTime > TIME_BETWEEN_WAVES)
 	{
-		bulletPtrs[i]->update(milliseconds);
+		mLastSpawnTime = mCurrentTime;
+		spawnBulletWave();
+	}
+	if (mCurrentTime - mLastSpeedIncreaseTime > INCREASE_SPAWN_SPEED_DELTA_TIME)
+	{
+		mLastSpeedIncreaseTime = mCurrentTime;
+		if(TIME_BETWEEN_WAVES >= 700)
+			TIME_BETWEEN_WAVES -= 50;
+	}
+	for (uint32_t i = 0; i< MAX_NUM_WAVES; ++i)
+	{
+		if (bulletWavePtrs[i] != NULL)
+		{
+			bulletWavePtrs[i]->update(milliseconds);
+			if (bulletWavePtrs[i]->getWaveAtCenter())
+			{
+				delete(bulletWavePtrs[i]);
+				bulletWavePtrs[i] = NULL;
+			}
+		}
 	}
 }

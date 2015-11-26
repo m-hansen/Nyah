@@ -11,3 +11,10 @@ typedef char char8_t;
 typedef short int16_t;
 typedef unsigned short uint16_t;
 typedef int bool8_t;
+
+enum BulletColor{
+	INVALID,
+	RED,
+	BLUE,
+	MAX,
+};
