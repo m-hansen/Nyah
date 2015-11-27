@@ -9,6 +9,7 @@ public:
 	void UpdateFrame(DWORD milliseconds);
 	void DestroyGame();
 	void init();
+	void reset();
 	void shutdown();
 	static const uint32_t mScreenWidth = 1024;
 	static const uint32_t mScreenHeight = 768;

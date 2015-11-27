@@ -58,6 +58,12 @@ void BulletManagerC::shutdown()
 	free(bulletWavePtrs);
 }
 
+void BulletManagerC::reset()
+{
+	delete sInstance;
+	sInstance = NULL;
+}
+
 void BulletManagerC::renderSprites()
 {
 	for (uint32_t i = 0; i< MAX_NUM_WAVES; ++i)

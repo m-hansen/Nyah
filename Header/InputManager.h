@@ -7,6 +7,8 @@ public:
 	static InputManagerC	*GetInstance() {return sInstance;};
 	void					init(){};
 	void					update(){};
+	bool8_t GetStartButton();
+	bool8_t GetResetButton();
 //checkout gameframework.cpp
 	Coord2D*					getCurrentMousePosition(){};
 	//keyboard interface?

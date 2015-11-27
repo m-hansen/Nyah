@@ -64,6 +64,8 @@ void TerminateApplication (GL_Window* window);		// Terminate The Application
 
 void ToggleFullscreen (GL_Window* window);			// Toggle Fullscreen / Windowed Mode
 
+void KeyReleased(GL_Window* window, WPARAM keyCode);				// Toggle Fullscreen / Windowed Mode
+
 // These Are The Function You Must Provide
 BOOL Initialize (GL_Window* window, Keys* keys);	// Performs All Your Initialization
 

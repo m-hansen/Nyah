@@ -6,9 +6,11 @@ public:
 	~StateManagerC(){};
 	enum 
 	{
-		NO_BALLS_FILLED,
-		HALF_BALLS_FILLED,
-		ALL_BALLS_FILLED
+		INVALID,
+		PLAYING,
+		GAMEOVER,
+		PAUSED,
+		MAX
 	};
 	int32_t		getState();
 	void		setState(int32_t stateToSet);

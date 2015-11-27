@@ -49,7 +49,7 @@
     <ClCompile Include="Source\stateManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="BulletWave.cpp">
+    <ClCompile Include="Source\BulletWave.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

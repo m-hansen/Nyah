@@ -32,6 +32,11 @@ void ToggleFullscreen (GL_Window* window)								// Toggle Fullscreen/Windowed
 	PostMessage (window->hWnd, WM_TOGGLEFULLSCREEN, 0, 0);				// Send A WM_TOGGLEFULLSCREEN Message
 }
 
+void KeyReleased(GL_Window* window, WPARAM keyCode)
+{
+	PostMessage(window->hWnd, WM_KEYUP, keyCode, 0);
+}
+
 void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
 {
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport

@@ -17,6 +17,11 @@
 
 SpriteManagerC* SpriteManagerC::sInstance=NULL;
 
+struct RenderData
+{
+	GLfloat uLeft, uRight, vTop, vBottom;
+	GLfloat xLeft, xRight, yTop, yBottom;
+};
 
 SpriteManagerC *SpriteManagerC::CreateInstance()
 {
@@ -32,65 +37,78 @@ void SpriteManagerC::init()
 	mBulletSpriteTexture = SOIL_load_OGL_texture("Sprites/bullets2.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 
-	mBackgroundTexture = SOIL_load_OGL_texture("Sprites/spacebg.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+	mBackgroundTexture = SOIL_load_OGL_texture("Sprites/bg.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 }
 
 void SpriteManagerC::renderBackground()
 {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture (GL_TEXTURE_2D, mBackgroundTexture);
-	glBegin (GL_QUADS);
+	struct RenderData quad;
 
-	GLfloat xPositionLeft = -2048.0f;
-	GLfloat xPositionRight = 2048.0f;
-	GLfloat yPositionTop = -2048.0f;
-	GLfloat yPositionBottom = 2048.0f;
+	//Set UV Coordinates
+	quad.uLeft = 0;
+	quad.uRight = 1;
+	quad.vTop = 0;
+	quad.vBottom = 1;
 
-	glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
-	glTexCoord2f(0, 0);
-	glVertex3f(xPositionLeft, yPositionTop, 0.0);
-	glTexCoord2f(1, 0);
-	glVertex3f(xPositionRight, yPositionTop, 0.0);
-	glTexCoord2f(1, 1);
-	glVertex3f(xPositionRight, yPositionBottom, 0.0);
-	glTexCoord2f(0, 1);
-	glVertex3f(xPositionLeft, yPositionBottom, 0.0);
+	//Set position coordinates
+	quad.xLeft = -2048.0f;
+	quad.xRight = 2048.0f;
+	quad.yTop = -2048.0f;
+	quad.yBottom = 2048.0f;
 
-	glEnd ();
+	OGL_Render(quad, mBackgroundTexture);
 }
 
 void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius)
 {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, mBulletSpriteTexture);
-	glBegin(GL_QUADS);
+	struct RenderData quad;
 
 	GLfloat u, v;
+	u = animationFrameNo * (1.0 / 8.0);
 	if (color == RED)
 	{
-		v = 0.75;
+		v = 0.25f;
 	}
 	else if(color == BLUE)
 	{
-		v = 0.25;
+		v = 0.75f;
 	}
-	u = animationFrameNo * (1.0/8.0);
 
-	left -= radius;
-	right -= radius;
-	top -= radius;
-	bottom -= radius;
+	//Set UV Coordinates
+	quad.uLeft = u;
+	quad.uRight = u + (1.0 / 8.0);
+	quad.vTop = v;
+	quad.vBottom = v + (1.0 / 4.0);
+
+	//Set position coordinates
+	quad.xLeft = left - radius;
+	quad.xRight = right - radius;
+	quad.yTop = top - radius;
+	quad.yBottom = bottom - radius;
+
+	OGL_Render(quad, mBulletSpriteTexture);
+}
+
+void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBegin(GL_QUADS);
 
 	glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
-	glTexCoord2f(u, v);
-	glVertex3f(left, top, 0.0);
-	glTexCoord2f(u + (1.0/8.0), v);
-	glVertex3f(right,top, 0.0);
-	glTexCoord2f(u + (1.0/8.0), v + (1.0/4.0));
-	glVertex3f(right, bottom, 0.0);
-	glTexCoord2f(u, v + (1.0/4.0));
-	glVertex3f(left, bottom, 0.0);
+
+	glTexCoord2f(quad.uLeft, quad.vTop);
+	glVertex3f(quad.xLeft, quad.yTop, 0.0);
+
+	glTexCoord2f(quad.uRight, quad.vTop);
+	glVertex3f(quad.xRight, quad.yTop, 0.0);
+
+	glTexCoord2f(quad.uRight, quad.vBottom);
+	glVertex3f(quad.xRight, quad.yBottom, 0.0);
+
+	glTexCoord2f(quad.uLeft, quad.vBottom);
+	glVertex3f(quad.xLeft, quad.yBottom, 0.0);
 
 	glEnd();
 }

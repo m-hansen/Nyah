@@ -100,7 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BulletWave.cpp" />
+    <ClCompile Include="Source\BulletWave.cpp" />
     <ClCompile Include="Source\ball.cpp" />
     <ClCompile Include="Source\BallManager.cpp" />
     <ClCompile Include="Source\Bullet.cpp" />

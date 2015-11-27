@@ -11,6 +11,7 @@ public:
 	void	updateBullets(DWORD milliseconds);
 	void	renderSprites();
 	void	shutdown();
+	void	reset();
 
 private:
 	static BulletManagerC *sInstance;
