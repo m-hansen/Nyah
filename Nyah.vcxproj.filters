@@ -52,6 +52,12 @@
     <ClCompile Include="Source\BulletWave.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UIManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SoundManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\ball.h">
@@ -123,7 +129,13 @@
     <ClInclude Include="gl\glut.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="BulletWave.h">
+    <ClInclude Include="Header\BulletWave.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\SoundManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\UIManager.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

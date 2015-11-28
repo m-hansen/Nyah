@@ -19,19 +19,19 @@ BulletWaveC::BulletWaveC()
 {
 	float_t missingArcStartAngle = getRangedRandom(0, 270);
 	BulletColor color = (BulletColor)getRangedRandom((int)RED, (int)MAX);
-	missingArcStartAngle *= (PI / 180.0f);
+	missingArcStartAngle *= RADIANS;
 	float_t x, y, theta;
 	bulletPtrs = (BulletC**)malloc(NUM_BULLETS * sizeof(BulletC*));
 	numBullets = 0;
 	for (int i = 0; i < NUM_BULLETS; i++)
 	{
 		bulletPtrs[i] = NULL;
-		theta = ((i * 7.5) * PI) / 180.0f;
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI / 2.0f))
+		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
+		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
 		{
 			x = 3000.0f * cos(theta);
 			y = 3000.0f * sin(theta);
-			bulletPtrs[i] = new BulletC(x, y, -1.0f * cos(theta), -1.0f * sin(theta), 135.0f, color);
+			bulletPtrs[i] = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color);
 			if (numBullets == 0)
 				firstBullet = bulletPtrs[i];
 			numBullets++;

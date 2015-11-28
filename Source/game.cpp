@@ -23,6 +23,8 @@
 #include "InputManager.h"
 #include "SpriteManager.h"
 #include "BulletManager.h"
+#include "UIManager.h"
+#include "SoundManager.h"
 
 // Declarations
 const char8_t CGame::mGameTitle[]="Framework1";
@@ -41,11 +43,15 @@ void CGame::init()
 	InputManagerC::CreateInstance();
 	SpriteManagerC::CreateInstance();
 	BulletManagerC::CreateInstance();
+	UIManagerC::CreateInstance();
+	SoundManagerC::CreateInstance();
 
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
 	SpriteManagerC::GetInstance()->init();
+	UIManagerC::GetInstance()->init();
+	SoundManagerC::GetInstance()->init();
 }
 
 void CGame::reset()
@@ -56,6 +62,8 @@ void CGame::reset()
 	BulletManagerC::CreateInstance();
 	BulletManagerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+
+	SoundManagerC::GetInstance()->reset();
 }
 
 void CGame::UpdateFrame(DWORD milliseconds)			
@@ -65,6 +73,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 
 	if (StateManagerC::GetInstance()->getState() == StateManagerC::PLAYING)
 	{
+		SpriteManagerC::GetInstance()->update(milliseconds);
 		BulletManagerC::GetInstance()->updateBullets(milliseconds);
 		if (InputManagerC::GetInstance()->GetResetButton())
 		{
@@ -77,6 +86,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 		if (InputManagerC::GetInstance()->GetStartButton())
 		{
 			StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+			SoundManagerC::GetInstance()->playBGM();
 		}
 	}
 }
@@ -86,6 +96,10 @@ void CGame::DrawScene(void)
 	startOpenGLDrawing();
 	SpriteManagerC::GetInstance()->renderBackground();
 	BulletManagerC::GetInstance()->renderSprites();
+	if (StateManagerC::GetInstance()->getState() == StateManagerC::GAMEOVER)
+	{
+		UIManagerC::GetInstance()->renderLogo();
+	}
 }
 
 
@@ -99,6 +113,7 @@ void CGame::shutdown()
 {
 	StateManagerC::GetInstance()->shutdown();
 	BulletManagerC::GetInstance()->shutdown();
+	SoundManagerC::GetInstance()->shutdown();
 }
 
 void CGame::DestroyGame(void)
@@ -107,4 +122,6 @@ void CGame::DestroyGame(void)
 	delete SpriteManagerC::GetInstance();
 	delete BulletManagerC::GetInstance();
 	delete InputManagerC::GetInstance();
+	delete SoundManagerC::GetInstance();
+	delete UIManagerC::GetInstance();
 }

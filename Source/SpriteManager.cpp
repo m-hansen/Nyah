@@ -21,6 +21,7 @@ struct RenderData
 {
 	GLfloat uLeft, uRight, vTop, vBottom;
 	GLfloat xLeft, xRight, yTop, yBottom;
+	GLubyte r, g, b, a;
 };
 
 SpriteManagerC *SpriteManagerC::CreateInstance()
@@ -39,6 +40,29 @@ void SpriteManagerC::init()
 
 	mBackgroundTexture = SOIL_load_OGL_texture("Sprites/bg.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+
+	colorStep = 0;
+	colorDelta = 1;
+}
+
+void SpriteManagerC::update(DWORD milliseconds)
+{
+	mCurrentTime += milliseconds;
+
+	if (mCurrentTime - mLastUpdateTime > COLOR_UPDATE_DELTA_TIME)
+	{
+		mLastUpdateTime = mCurrentTime;
+		if (colorStep == 0)
+		{
+			colorDelta = 1;
+		}
+		else if (colorStep == 255)
+		{
+			colorDelta = -1;
+		}
+		colorStep = (colorStep + colorDelta);
+	}
+
 }
 
 void SpriteManagerC::renderBackground()
@@ -56,6 +80,12 @@ void SpriteManagerC::renderBackground()
 	quad.xRight = 2048.0f;
 	quad.yTop = -2048.0f;
 	quad.yBottom = 2048.0f;
+
+	//Set color
+	quad.r = 0xFF - colorStep;
+	quad.g = 0x00;
+	quad.b = colorStep;
+	quad.a = 0xFF;
 
 	OGL_Render(quad, mBackgroundTexture);
 }
@@ -87,6 +117,12 @@ void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, G
 	quad.yTop = top - radius;
 	quad.yBottom = bottom - radius;
 
+	//Set color
+	quad.r = 0xFF;
+	quad.g = 0xFF;
+	quad.b = 0xFF;
+	quad.a = 0xFF;
+
 	OGL_Render(quad, mBulletSpriteTexture);
 }
 
@@ -96,7 +132,7 @@ void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glBegin(GL_QUADS);
 
-	glColor4ub(0xFF, 0xFF, 0xFF, 0xFF);
+	glColor4ub(quad.r, quad.g, quad.b, quad.a);
 
 	glTexCoord2f(quad.uLeft, quad.vTop);
 	glVertex3f(quad.xLeft, quad.yTop, 0.0);

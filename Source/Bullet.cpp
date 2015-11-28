@@ -51,15 +51,16 @@ BulletC::~BulletC()
 {
 };
 
-void BulletC::move()
+void BulletC::move(DWORD milliseconds)
 {
-	mPosition.x += mVelocity.x;
-	mPosition.y += mVelocity.y;
+	float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime)/1000.0f;
+	mPosition.x += mVelocity.x * deltaTime;
+	mPosition.y += mVelocity.y * deltaTime;
 }
 
 void BulletC::update(DWORD milliseconds)
 {
-	move();
+	move(milliseconds);
 	doCollisions();
 	updateAnimationFrame(milliseconds);
 }
