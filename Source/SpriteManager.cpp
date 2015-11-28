@@ -2,6 +2,7 @@
 #include <windows.h>											// Header File For Windows
 #include <stdio.h>												// Header File For Standard Input / Output
 #include <stdarg.h>												// Header File For Variable Argument Routines
+#include <string>
 #include <math.h>												// Header File For Math Operations
 #include <gl\gl.h>												// Header File For The OpenGL32 Library
 #include <gl\glu.h>												// Header File For The GLu32 Library
@@ -35,14 +36,20 @@ SpriteManagerC *SpriteManagerC::CreateInstance()
 void SpriteManagerC::init()
 {
 	/* load an image file directly as a new OpenGL texture */
-	mBulletSpriteTexture = SOIL_load_OGL_texture("Sprites/bullets2.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
-
-	mBackgroundTexture = SOIL_load_OGL_texture("Sprites/bg.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+	mBulletSpriteTexture = loadTexture("Sprites/bullets2.png");
+	mPlayerSpriteTexture = loadTexture("Sprites/player.png");
+	mBackgroundTexture = loadTexture("Sprites/bg.png");
 
 	colorStep = 0;
 	colorDelta = 1;
+}
+
+GLuint SpriteManagerC::loadTexture(char8_t* fileToLoad)
+{
+	GLuint textureID = SOIL_load_OGL_texture(fileToLoad, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+
+	return textureID;
 }
 
 void SpriteManagerC::update(DWORD milliseconds)
@@ -124,6 +131,19 @@ void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, G
 	quad.a = 0xFF;
 
 	OGL_Render(quad, mBulletSpriteTexture);
+}
+
+void SpriteManagerC::renderPlayer(GLfloat left, GLfloat right, GLfloat top, GLfloat bottom)
+{
+	struct RenderData quad;
+
+	// Set position coordinates
+	quad.xLeft = left;
+	quad.xRight = right;
+	quad.yTop = top;
+	quad.yBottom = bottom;
+
+	OGL_Render(quad, mPlayerSpriteTexture);
 }
 
 void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
