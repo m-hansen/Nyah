@@ -75,36 +75,48 @@ void CGame::UpdateFrame(DWORD milliseconds)
 	keyProcess();
 //	InputManagerC::GetInstance()->update(milliseconds);
 
-	if (StateManagerC::GetInstance()->getState() == StateManagerC::PLAYING)
+	// Update frame, regardless of state
+	SpriteManagerC::GetInstance()->update(milliseconds);
+	
+	switch (StateManagerC::GetInstance()->getState())
 	{
-		PlayerC::GetInstance()->update(milliseconds);
-		SpriteManagerC::GetInstance()->update(milliseconds);
-		BulletManagerC::GetInstance()->updateBullets(milliseconds);
-		if (InputManagerC::GetInstance()->GetResetButton())
-		{
-			CGame::GetInstance()->reset();
-		}
+		case StateManagerC::TITLE:
+			break;
+		case StateManagerC::PLAYING:
+			BulletManagerC::GetInstance()->updateBullets(milliseconds);
+			PlayerC::GetInstance()->update(milliseconds);
+			if (InputManagerC::GetInstance()->GetResetButton())
+			{
+				CGame::GetInstance()->reset();
+			}
+			break;
+		case StateManagerC::GAMEOVER:
+			if (InputManagerC::GetInstance()->GetStartButton())
+			{
+				StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+				SoundManagerC::GetInstance()->playBGM();
+			}
+			break;
 	}
-
-	if (StateManagerC::GetInstance()->getState() == StateManagerC::GAMEOVER)
-	{
-		if (InputManagerC::GetInstance()->GetStartButton())
-		{
-			StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
-			SoundManagerC::GetInstance()->playBGM();
-		}
-	}
+	
 }
 
 void CGame::DrawScene(void)											
 {
 	startOpenGLDrawing();
+
+	// Render, regardless of state
 	SpriteManagerC::GetInstance()->renderBackground();
-	BulletManagerC::GetInstance()->renderSprites();
-	PlayerC::GetInstance()->render();
-	if (StateManagerC::GetInstance()->getState() == StateManagerC::GAMEOVER)
+	
+	switch (StateManagerC::GetInstance()->getState())
 	{
-		UIManagerC::GetInstance()->renderLogo();
+		case StateManagerC::PLAYING:
+			BulletManagerC::GetInstance()->renderSprites();
+			PlayerC::GetInstance()->render();
+			break;
+		case StateManagerC::GAMEOVER:
+			UIManagerC::GetInstance()->renderLogo();
+			break;
 	}
 }
 

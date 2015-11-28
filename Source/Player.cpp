@@ -22,10 +22,10 @@ PlayerC *PlayerC::CreateInstance()
 
 void PlayerC::init()
 {
-	mPosition.x = 100.0f;
-	mPosition.y = 100.0f;
-	mVelocity.x = 1.0f;
-	mVelocity.y = 1.0f;
+	mPosition.x = 0.0f;
+	mPosition.y = 0.0f;
+	mVelocity.x = 0.0f;
+	mVelocity.y = 0.0f;
 	mAngle = 0.0f;
 	mRadius = INITIAL_RADIUS;
 	mOrigin.x = PLAYER_WIDTH / 2;

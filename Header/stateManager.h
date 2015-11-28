@@ -7,6 +7,7 @@ public:
 	enum 
 	{
 		INVALID,
+		TITLE,
 		PLAYING,
 		GAMEOVER,
 		PAUSED,
