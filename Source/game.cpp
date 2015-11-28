@@ -50,7 +50,7 @@ void CGame::init()
 
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();
-	StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+	StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 	SpriteManagerC::GetInstance()->init();
 	UIManagerC::GetInstance()->init();
 	SoundManagerC::GetInstance()->init();
@@ -65,7 +65,7 @@ void CGame::reset()
 	BulletManagerC::CreateInstance();
 	BulletManagerC::GetInstance()->init();
 	PlayerC::GetInstance()->init();
-	StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+	StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 
 	SoundManagerC::GetInstance()->reset();
 }
@@ -81,6 +81,11 @@ void CGame::UpdateFrame(DWORD milliseconds)
 	switch (StateManagerC::GetInstance()->getState())
 	{
 		case StateManagerC::TITLE:
+			if (InputManagerC::GetInstance()->GetStartButton())
+			{
+				StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+				SoundManagerC::GetInstance()->playBGM();
+			}
 			break;
 		case StateManagerC::PLAYING:
 			BulletManagerC::GetInstance()->updateBullets(milliseconds);
@@ -89,12 +94,15 @@ void CGame::UpdateFrame(DWORD milliseconds)
 			{
 				CGame::GetInstance()->reset();
 			}
+			if (InputManagerC::GetInstance()->DebugPlayerKill())
+			{
+				StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+			}
 			break;
 		case StateManagerC::GAMEOVER:
-			if (InputManagerC::GetInstance()->GetStartButton())
+			if (InputManagerC::GetInstance()->GetResetButton())
 			{
-				StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
-				SoundManagerC::GetInstance()->playBGM();
+				CGame::GetInstance()->reset();
 			}
 			break;
 	}
@@ -110,12 +118,15 @@ void CGame::DrawScene(void)
 	
 	switch (StateManagerC::GetInstance()->getState())
 	{
+		case StateManagerC::TITLE:
+			UIManagerC::GetInstance()->renderLogo();
+			break;
 		case StateManagerC::PLAYING:
 			BulletManagerC::GetInstance()->renderSprites();
 			PlayerC::GetInstance()->render();
 			break;
 		case StateManagerC::GAMEOVER:
-			UIManagerC::GetInstance()->renderLogo();
+			UIManagerC::GetInstance()->renderGameOver();
 			break;
 	}
 }

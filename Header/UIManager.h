@@ -1,3 +1,7 @@
+#define SMALL_BUFFER 8
+#define MEDIUM_BUFFER 32
+#define LARGE_BUFFER 64
+
 class UIManagerC
 {
 public:
@@ -8,12 +12,15 @@ public:
 	void init();
 	void renderLogo();
 	void renderScore();
+	void renderGameOver();
 	void UIManagerC::OGL_Render();
 
 private:
 	static UIManagerC *sInstance;
 	UIManagerC() {};
 
-	char8_t title[8];
-	char8_t startPrompt[32];
+	char8_t title[SMALL_BUFFER];
+	char8_t startPrompt[MEDIUM_BUFFER];
+	char8_t gameOverText[MEDIUM_BUFFER];
+	char8_t restartPrompt[MEDIUM_BUFFER];
 };

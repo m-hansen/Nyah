@@ -53,3 +53,12 @@ bool8_t InputManagerC::GetCounterClockwiseRotationButton()
 	}
 	return false;
 }
+
+bool8_t InputManagerC::DebugPlayerKill()
+{
+	if (g_keys->keyDown[VK_F3])
+	{
+		return true;
+	}
+	return false;
+}
