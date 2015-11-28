@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\BulletWave.cpp" />
     <ClCompile Include="Source\ball.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Header\Object.h" />
     <ClInclude Include="Header\openGLFramework.h" />
     <ClInclude Include="Header\openGLStuff.h" />
+    <ClInclude Include="Header\Player.h" />
     <ClInclude Include="Header\random.h" />
     <ClInclude Include="Header\ShapeDraw.h" />
     <ClInclude Include="Header\SpriteManager.h" />

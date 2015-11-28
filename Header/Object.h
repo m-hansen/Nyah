@@ -1,9 +1,11 @@
 //class BallC;
+class PlayerC;
 class BulletC;
 class FieldC;
 class ObjectC
 {
     //friend class BallC;
+	friend class PlayerC;
 	friend class BulletC;
 	friend class FieldC;
 public:

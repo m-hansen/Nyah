@@ -25,9 +25,10 @@
 #include "BulletManager.h"
 #include "UIManager.h"
 #include "SoundManager.h"
+#include "Player.h"
 
 // Declarations
-const char8_t CGame::mGameTitle[]="Framework1";
+const char8_t CGame::mGameTitle[]="Nyah";
 CGame* CGame::sInstance=NULL;
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any OpenGL Initialization Goes Here
 {
@@ -45,6 +46,7 @@ void CGame::init()
 	BulletManagerC::CreateInstance();
 	UIManagerC::CreateInstance();
 	SoundManagerC::CreateInstance();
+	PlayerC::CreateInstance();
 
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();
@@ -52,6 +54,7 @@ void CGame::init()
 	SpriteManagerC::GetInstance()->init();
 	UIManagerC::GetInstance()->init();
 	SoundManagerC::GetInstance()->init();
+	PlayerC::GetInstance()->init();
 }
 
 void CGame::reset()
@@ -61,6 +64,7 @@ void CGame::reset()
 
 	BulletManagerC::CreateInstance();
 	BulletManagerC::GetInstance()->init();
+	PlayerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
 
 	SoundManagerC::GetInstance()->reset();
@@ -73,6 +77,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 
 	if (StateManagerC::GetInstance()->getState() == StateManagerC::PLAYING)
 	{
+		PlayerC::GetInstance()->update(milliseconds);
 		SpriteManagerC::GetInstance()->update(milliseconds);
 		BulletManagerC::GetInstance()->updateBullets(milliseconds);
 		if (InputManagerC::GetInstance()->GetResetButton())
@@ -96,12 +101,12 @@ void CGame::DrawScene(void)
 	startOpenGLDrawing();
 	SpriteManagerC::GetInstance()->renderBackground();
 	BulletManagerC::GetInstance()->renderSprites();
+	PlayerC::GetInstance()->render();
 	if (StateManagerC::GetInstance()->getState() == StateManagerC::GAMEOVER)
 	{
 		UIManagerC::GetInstance()->renderLogo();
 	}
 }
-
 
 CGame *CGame::CreateInstance()
 {
@@ -121,6 +126,7 @@ void CGame::DestroyGame(void)
 	delete StateManagerC::GetInstance();	
 	delete SpriteManagerC::GetInstance();
 	delete BulletManagerC::GetInstance();
+	delete PlayerC::GetInstance();
 	delete InputManagerC::GetInstance();
 	delete SoundManagerC::GetInstance();
 	delete UIManagerC::GetInstance();

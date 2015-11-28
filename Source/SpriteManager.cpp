@@ -137,11 +137,23 @@ void SpriteManagerC::renderPlayer(GLfloat left, GLfloat right, GLfloat top, GLfl
 {
 	struct RenderData quad;
 
+	// Set UV Coordinates
+	quad.uLeft = 0;
+	quad.uRight = 1;
+	quad.vTop = 0;
+	quad.vBottom = 1;
+
 	// Set position coordinates
 	quad.xLeft = left;
 	quad.xRight = right;
 	quad.yTop = top;
 	quad.yBottom = bottom;
+
+	// Set color
+	quad.r = 0xFF;
+	quad.g = 0xFF;
+	quad.b = 0xFF;
+	quad.a = 0xFF;
 
 	OGL_Render(quad, mPlayerSpriteTexture);
 }

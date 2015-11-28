@@ -35,3 +35,21 @@ bool8_t InputManagerC::GetResetButton()
 	}
 	return false;
 }
+
+bool8_t InputManagerC::GetClockwiseRotationButton()
+{
+	if (g_keys->keyDown[VK_RIGHT])
+	{
+		return true;
+	}
+	return false;
+}
+
+bool8_t InputManagerC::GetCounterClockwiseRotationButton()
+{
+	if (g_keys->keyDown[VK_LEFT])
+	{
+		return true;
+	}
+	return false;
+}

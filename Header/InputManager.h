@@ -9,6 +9,8 @@ public:
 	void					update(){};
 	bool8_t GetStartButton();
 	bool8_t GetResetButton();
+	bool8_t GetClockwiseRotationButton();
+	bool8_t GetCounterClockwiseRotationButton();
 //checkout gameframework.cpp
 	Coord2D*					getCurrentMousePosition(){};
 	//keyboard interface?
