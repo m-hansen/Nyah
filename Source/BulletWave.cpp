@@ -3,9 +3,9 @@
 #include <stdio.h>												// Header File For Standard Input / Output
 #include <stdarg.h>												// Header File For Variable Argument Routines
 #include <math.h>												// Header File For Math Operations
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl\glut.h>
+#include <gl/glut.h>
+#include <gl/gl.h>												// Header File For The OpenGL32 Library
+#include <gl/glu.h>												// Header File For The GLu32 Library
 #include "baseTypes.h"
 #include "openglframework.h"	
 #include "gamedefs.h"
@@ -18,12 +18,12 @@
 BulletWaveC::BulletWaveC()
 {
 	float_t missingArcStartAngle = getRangedRandom(0, 270);
-	BulletColor color = (BulletColor)getRangedRandom((int)RED, (int)MAX);
+	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX);
 	missingArcStartAngle *= RADIANS;
 	float_t x, y, theta;
 	bulletPtrs = (BulletC**)malloc(NUM_BULLETS * sizeof(BulletC*));
 	numBullets = 0;
-	for (int i = 0; i < NUM_BULLETS; i++)
+	for (int32_t i = 0; i < NUM_BULLETS; i++)
 	{
 		bulletPtrs[i] = NULL;
 		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
@@ -33,7 +33,9 @@ BulletWaveC::BulletWaveC()
 			y = 3000.0f * sin(theta);
 			bulletPtrs[i] = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color);
 			if (numBullets == 0)
+			{
 				firstBullet = bulletPtrs[i];
+			}
 			numBullets++;
 		}
 	}
@@ -42,10 +44,12 @@ BulletWaveC::BulletWaveC()
 
 BulletWaveC::~BulletWaveC()
 {
-	for (uint32_t i = 0; i< NUM_BULLETS; ++i)
+	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
 	{
-		if(bulletPtrs[i] != NULL)
+		if (bulletPtrs[i] != NULL)
+		{
 			delete bulletPtrs[i];
+		}
 	}
 	free(bulletPtrs);
 }
@@ -57,10 +61,12 @@ bool8_t BulletWaveC::getWaveAtCenter()
 
 void BulletWaveC::update(DWORD milliseconds)
 {
-	for (uint32_t i = 0; i<NUM_BULLETS; ++i)
+	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
 	{
 		if (bulletPtrs[i] != NULL)
+		{
 			bulletPtrs[i]->update(milliseconds);
+		}
 	}
 	if (firstBullet->getIsAtCenter())
 	{
@@ -70,9 +76,11 @@ void BulletWaveC::update(DWORD milliseconds)
 
 void BulletWaveC::render()
 {
-	for (uint32_t i = 0; i< NUM_BULLETS; ++i)
+	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
 	{
 		if (bulletPtrs[i] != NULL)
+		{
 			bulletPtrs[i]->render();
+		}
 	}
 }

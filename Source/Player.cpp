@@ -7,11 +7,12 @@
 #include "baseTypes.h"
 #include "collInfo.h"
 #include "Object.h"
-#include <SpriteManager.h>
+#include "SpriteManager.h"
 #include "InputManager.h"
+#include "CollisionRectangle.h"
 #include "Player.h"
 
-PlayerC* PlayerC::sInstance = NULL;
+PlayerC *PlayerC::sInstance = NULL;
 
 PlayerC *PlayerC::CreateInstance()
 {
@@ -30,6 +31,10 @@ void PlayerC::init()
 	mRadius = INITIAL_RADIUS;
 	mOrigin.x = PLAYER_WIDTH / 2;
 	mOrigin.y = PLAYER_HEIGHT / 2;
+	/*mCollRect.x = mPosition.x;
+	mCollRect.y = mPosition.y;
+	mCollRect.width = PLAYER_WIDTH;
+	mCollRect.height = PLAYER_HEIGHT;*/
 }
 
 void PlayerC::update(DWORD milliseconds)
@@ -53,6 +58,8 @@ void PlayerC::move(DWORD milliseconds)
 {
 	mPosition.x = mOrigin.x + sin(mAngle) * mRadius;
 	mPosition.y = mOrigin.y + cos(mAngle) * mRadius;
+	/*mCollRect.x = mPosition.x;
+	mCollRect.y = mPosition.y;*/
 }
 
 void PlayerC::render()
@@ -64,3 +71,8 @@ void PlayerC::render()
 
 	SpriteManagerC::GetInstance()->renderPlayer(left, right, top, bottom);
 }
+//
+//CollisionRectangle* PlayerC::getCollisionRectangle()
+//{
+//	return &mCollRect;
+//}

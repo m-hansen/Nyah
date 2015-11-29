@@ -3,12 +3,11 @@ class PlayerC : public ObjectC
 public:
 	static PlayerC *CreateInstance();
 	static PlayerC *GetInstance() { return sInstance; };
-	//PlayerC();
-	//PlayerC(float initPosX, float initPosY, float initVelX, float initVelY);
 	~PlayerC() {};
 	void init();
 	void update(DWORD milliseconds);
 	virtual void render();
+	//CollisionRectangle* getCollisionRectangle();
 private:
 	static PlayerC *sInstance;
 	PlayerC() {};
@@ -18,6 +17,7 @@ private:
 	float_t mRadius;
 	float_t mAngle;
 	Coord2D mOrigin;
+	/*CollisionRectangle mCollRect;*/
 
 	DWORD mLastUpdateTime;
 	DWORD mCurrentTime;

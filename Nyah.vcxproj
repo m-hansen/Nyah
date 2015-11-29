@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CollisionHandler.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\BulletWave.cpp" />
@@ -133,6 +134,8 @@
     <ClInclude Include="Header\Bullet.h" />
     <ClInclude Include="Header\BulletManager.h" />
     <ClInclude Include="Header\collInfo.h" />
+    <ClInclude Include="Header\CollisionHandler.h" />
+    <ClInclude Include="Header\CollisionRectangle.h" />
     <ClInclude Include="Header\field.h" />
     <ClInclude Include="Header\FieldManager.h" />
     <ClInclude Include="Header\game.h" />
