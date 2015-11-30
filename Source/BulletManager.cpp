@@ -28,35 +28,44 @@ void BulletManagerC::init()
 {
 	TIME_BETWEEN_WAVES = 1500;
 	VELOCITY = -25;
-	bulletWavePtrs = (BulletWaveC**)malloc(MAX_NUM_WAVES * sizeof(BulletWaveC*));
-	for (int32_t i = 0; i < MAX_NUM_WAVES; i++)
-	{
-		bulletWavePtrs[i] = NULL;
-	}
+
+	topOfBulletWaveList = NULL;
+	topOfBulletWaveList = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
+	topOfBulletWaveList->nextBulletWave = NULL;
 }
 
 void BulletManagerC::spawnBulletWave()
 {
-	for (int32_t i = 0; i < MAX_NUM_WAVES; i++)
+	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
+
+	while (true)
 	{
-		if (bulletWavePtrs[i] == NULL)
+		if (currentBulletWave->nextBulletWave == NULL)
 		{
-			bulletWavePtrs[i] = new BulletWaveC(VELOCITY);
+			currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY);
+			currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
+			currentBulletWave = currentBulletWave->nextBulletWave;
+			currentBulletWave->nextBulletWave = NULL;
 			break;
+		}
+		else
+		{
+			currentBulletWave = currentBulletWave->nextBulletWave;
 		}
 	}
 }
 
 void BulletManagerC::shutdown()
 {
-	for (uint32_t i = 0; i < MAX_NUM_WAVES; ++i)
+	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
+	while (currentBulletWave->nextBulletWave != NULL)
 	{
-		if (bulletWavePtrs[i] != NULL)
-		{
-			delete bulletWavePtrs[i];
-		}
+		BulletWaveListT* temp = currentBulletWave;
+		delete temp->bulletWavePtr;
+		currentBulletWave = currentBulletWave->nextBulletWave;
+		free(temp);
 	}
-	free(bulletWavePtrs);
+	topOfBulletWaveList = NULL;
 }
 
 void BulletManagerC::reset()
@@ -67,12 +76,11 @@ void BulletManagerC::reset()
 
 void BulletManagerC::renderSprites()
 {
-	for (uint32_t i = 0; i < MAX_NUM_WAVES; ++i)
+	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
+	while (currentBulletWave->nextBulletWave != NULL)
 	{
-		if (bulletWavePtrs[i] != NULL)
-		{
-			bulletWavePtrs[i]->render();
-		}
+		currentBulletWave->bulletWavePtr->render();
+		currentBulletWave = currentBulletWave->nextBulletWave;
 	}
 }
 
@@ -93,16 +101,21 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 			VELOCITY--;
 		}
 	}
-	for (uint32_t i = 0; i < MAX_NUM_WAVES; ++i)
+	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
+	while (currentBulletWave->nextBulletWave != NULL)
 	{
-		if (bulletWavePtrs[i] != NULL)
+		currentBulletWave->bulletWavePtr->update(milliseconds);
+		currentBulletWave = currentBulletWave->nextBulletWave;
+	}
+
+	if (topOfBulletWaveList->nextBulletWave != NULL)
+	{
+		if (topOfBulletWaveList->bulletWavePtr->getWaveAtCenter())
 		{
-			bulletWavePtrs[i]->update(milliseconds);
-			if (bulletWavePtrs[i]->getWaveAtCenter())
-			{
-				delete(bulletWavePtrs[i]);
-				bulletWavePtrs[i] = NULL;
-			}
+			BulletWaveListT* temp = topOfBulletWaveList->nextBulletWave;
+			delete topOfBulletWaveList->bulletWavePtr;
+			free(topOfBulletWaveList);
+			topOfBulletWaveList = temp;
 		}
 	}
 }

@@ -11,6 +11,7 @@ public:
 	void renderBullet(BulletAnimationState state, BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius);
 	void renderPlayer(int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom);
 	void SpriteManagerC::OGL_Render(struct RenderData img, GLuint textureID);
+	void SpriteManagerC::OGL_Render2(struct RenderData img, GLuint textureID);
 
 private:
 	static SpriteManagerC *sInstance;
@@ -26,7 +27,12 @@ private:
 	GLuint colorStep;
 	GLuint colorDelta;
 
+	GLfloat angle;
+	GLint rotationDirection;
+
 	DWORD mCurrentTime;
-	DWORD mLastUpdateTime;
+	DWORD mLastColorUpdateTime;
+	DWORD mLastAngleUpdateTime;
 };
 #define COLOR_UPDATE_DELTA_TIME 100
+#define ANGLE_UPDATE_DELTA_TIME 1

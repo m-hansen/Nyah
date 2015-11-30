@@ -42,6 +42,8 @@ void SpriteManagerC::init()
 
 	colorStep = 0;
 	colorDelta = 1;
+	angle = 0;
+	rotationDirection = 1;
 }
 
 GLuint SpriteManagerC::loadTexture(char8_t* fileToLoad)
@@ -56,9 +58,9 @@ void SpriteManagerC::update(DWORD milliseconds)
 {
 	mCurrentTime += milliseconds;
 
-	if (mCurrentTime - mLastUpdateTime > COLOR_UPDATE_DELTA_TIME)
+	if (mCurrentTime - mLastColorUpdateTime > COLOR_UPDATE_DELTA_TIME)
 	{
-		mLastUpdateTime = mCurrentTime;
+		mLastColorUpdateTime = mCurrentTime;
 		if (colorStep == 0)
 		{
 			colorDelta = 1;
@@ -68,6 +70,16 @@ void SpriteManagerC::update(DWORD milliseconds)
 			colorDelta = -1;
 		}
 		colorStep = (colorStep + colorDelta);
+	}
+	if (mCurrentTime - mLastAngleUpdateTime > ANGLE_UPDATE_DELTA_TIME)
+	{
+		mLastAngleUpdateTime = mCurrentTime;
+		int32_t reverseChance = getRangedRandom(0, 1000);
+		if (reverseChance > 5 && reverseChance < 10)
+		{
+			rotationDirection *= -1;
+		}
+		angle += rotationDirection * 0.5f;
 	}
 
 }
@@ -94,7 +106,7 @@ void SpriteManagerC::renderBackground()
 	quad.b = colorStep;
 	quad.a = 0xFF;
 
-	OGL_Render(quad, mBackgroundTexture);
+	OGL_Render2(quad, mBackgroundTexture);
 }
 
 void SpriteManagerC::renderBullet(BulletAnimationState state, BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius)
@@ -175,6 +187,32 @@ void SpriteManagerC::renderPlayer(int32_t animationFrameNo, GLfloat left, GLfloa
 }
 
 void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
+{
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBegin(GL_QUADS);
+
+	glColor4ub(quad.r, quad.g, quad.b, quad.a);
+
+	glTexCoord2f(quad.uLeft, quad.vTop);
+	glVertex3f(quad.xLeft, quad.yTop, 0.0);
+
+	glTexCoord2f(quad.uRight, quad.vTop);
+	glVertex3f(quad.xRight, quad.yTop, 0.0);
+
+	glTexCoord2f(quad.uRight, quad.vBottom);
+	glVertex3f(quad.xRight, quad.yBottom, 0.0);
+
+	glTexCoord2f(quad.uLeft, quad.vBottom);
+	glVertex3f(quad.xLeft, quad.yBottom, 0.0);
+
+	glEnd();
+	glPopMatrix();
+}
+
+void SpriteManagerC::OGL_Render2(struct RenderData quad, GLuint textureID)
 {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);

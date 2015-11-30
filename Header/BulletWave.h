@@ -1,3 +1,10 @@
+struct BulletList
+{
+	BulletC* bulletPtr;
+	struct BulletList *nextBullet;
+};
+typedef struct BulletList BulletListT;
+
 class BulletWaveC
 {
 public:
@@ -7,9 +14,7 @@ public:
 	void render();
 	bool8_t getWaveAtCenter();
 private:
-	BulletC **bulletPtrs;
-	BulletC *firstBullet;
-	uint32_t numBullets;
+	BulletListT *topOfBulletList;
 	bool8_t waveAtCenter;
 	static const int32_t NUM_BULLETS = 48;
 	static const int32_t BULLET_RADIUS = 135;

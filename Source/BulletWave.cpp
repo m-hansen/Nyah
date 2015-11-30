@@ -17,41 +17,42 @@
 
 BulletWaveC::BulletWaveC(int32_t VELOCITY)
 {
-	float_t missingArcStartAngle = getRangedRandom(0, 270);
+	float_t missingArcStartAngle = getRangedRandom(0, 270) * RADIANS;
 	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	missingArcStartAngle *= RADIANS;
 	float_t x, y, theta;
-	bulletPtrs = (BulletC**)malloc(NUM_BULLETS * sizeof(BulletC*));
-	numBullets = 0;
+
+	topOfBulletList = NULL;
+	topOfBulletList = (BulletListT*)malloc(sizeof(BulletList));
+	BulletListT* currentBullet = topOfBulletList;
+	currentBullet->nextBullet = NULL;
+
 	for (int32_t i = 0; i < NUM_BULLETS; i++)
 	{
-		bulletPtrs[i] = NULL;
 		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
 		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
 		{
 			x = 3000.0f * cos(theta);
 			y = 3000.0f * sin(theta);
-			bulletPtrs[i] = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color);
-			if (numBullets == 0)
-			{
-				firstBullet = bulletPtrs[i];
-			}
-			numBullets++;
+			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color);
+			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
+			currentBullet = currentBullet->nextBullet;
 		}
 	}
+	currentBullet->nextBullet = NULL;
 	waveAtCenter = false;
 }
 
 BulletWaveC::~BulletWaveC()
 {
-	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
+	BulletListT* currentBullet = topOfBulletList;
+	while (currentBullet->nextBullet != NULL)
 	{
-		if (bulletPtrs[i] != NULL)
-		{
-			delete bulletPtrs[i];
-		}
+		BulletListT* temp = currentBullet;
+		delete temp->bulletPtr;
+		currentBullet = currentBullet->nextBullet;
+		free(temp);
 	}
-	free(bulletPtrs);
+	topOfBulletList = NULL;
 }
 
 bool8_t BulletWaveC::getWaveAtCenter()
@@ -61,14 +62,13 @@ bool8_t BulletWaveC::getWaveAtCenter()
 
 void BulletWaveC::update(DWORD milliseconds)
 {
-	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
+	BulletListT* currentBullet = topOfBulletList;
+	while (currentBullet->nextBullet != NULL)
 	{
-		if (bulletPtrs[i] != NULL)
-		{
-			bulletPtrs[i]->update(milliseconds);
-		}
+		currentBullet->bulletPtr->update(milliseconds);
+		currentBullet = currentBullet->nextBullet;
 	}
-	if (firstBullet->getIsAtCenter())
+	if (topOfBulletList->bulletPtr->getIsAtCenter())
 	{
 		waveAtCenter = true;
 	}
@@ -76,11 +76,10 @@ void BulletWaveC::update(DWORD milliseconds)
 
 void BulletWaveC::render()
 {
-	for (uint32_t i = 0; i < NUM_BULLETS; ++i)
+	BulletListT* currentBullet = topOfBulletList;
+	while (currentBullet->nextBullet != NULL)
 	{
-		if (bulletPtrs[i] != NULL)
-		{
-			bulletPtrs[i]->render();
-		}
+		currentBullet->bulletPtr->render();
+		currentBullet = currentBullet->nextBullet;
 	}
 }

@@ -1,4 +1,12 @@
 class BulletWaveC;
+
+struct BulletWaveList
+{
+	BulletWaveC* bulletWavePtr;
+	struct BulletWaveList *nextBulletWave;
+};
+typedef struct BulletWaveList BulletWaveListT;
+
 class BulletManagerC
 {
 public:
@@ -17,7 +25,7 @@ private:
 	static BulletManagerC *sInstance;
 	BulletManagerC() {};
 
-	BulletWaveC **bulletWavePtrs;
+	BulletWaveListT *topOfBulletWaveList;
 	static const int32_t MAX_NUM_WAVES = 7;
 	int32_t TIME_BETWEEN_WAVES;
 	int32_t VELOCITY;
