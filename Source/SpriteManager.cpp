@@ -37,8 +37,8 @@ void SpriteManagerC::init()
 {
 	/* load an image file directly as a new OpenGL texture */
 	mBulletSpriteTexture = loadTexture("Sprites/bullets2.png");
-	mPlayerSpriteTexture = loadTexture("Sprites/player.png");
-	mBackgroundTexture = loadTexture("Sprites/bg.png");
+	mPlayerSpriteTexture = loadTexture("Sprites/playersheet.png");
+	mBackgroundTexture = loadTexture("Sprites/bg2.png");
 
 	colorStep = 0;
 	colorDelta = 1;
@@ -97,7 +97,7 @@ void SpriteManagerC::renderBackground()
 	OGL_Render(quad, mBackgroundTexture);
 }
 
-void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius)
+void SpriteManagerC::renderBullet(BulletAnimationState state, BulletColor color, int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom, GLfloat radius)
 {
 	struct RenderData quad;
 
@@ -105,11 +105,25 @@ void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, G
 	u = animationFrameNo * (1.0 / 8.0);
 	if (color == RED)
 	{
-		v = 0.25f;
+		if (state == GLOWING)
+		{
+			v = 0.25f;
+		}
+		else if (state == SHRINKING)
+		{
+			v = 0.0f;
+		}
 	}
 	else if(color == BLUE)
 	{
-		v = 0.75f;
+		if (state == GLOWING)
+		{
+			v = 0.75f;
+		}
+		else if (state == SHRINKING)
+		{
+			v = 0.5f;
+		}
 	}
 
 	//Set UV Coordinates
@@ -133,13 +147,15 @@ void SpriteManagerC::renderBullet(BulletColor color, int32_t animationFrameNo, G
 	OGL_Render(quad, mBulletSpriteTexture);
 }
 
-void SpriteManagerC::renderPlayer(GLfloat left, GLfloat right, GLfloat top, GLfloat bottom)
+void SpriteManagerC::renderPlayer(int32_t animationFrameNo, GLfloat left, GLfloat right, GLfloat top, GLfloat bottom)
 {
+	GLfloat u = animationFrameNo * (1.0 / 4.0);
+
 	struct RenderData quad;
 
 	// Set UV Coordinates
-	quad.uLeft = 0;
-	quad.uRight = 1;
+	quad.uLeft = u;
+	quad.uRight = u + (1.0 / 4.0);
 	quad.vTop = 0;
 	quad.vBottom = 1;
 

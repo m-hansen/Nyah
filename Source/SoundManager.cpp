@@ -24,6 +24,7 @@ void SoundManagerC::reset()
 void SoundManagerC::shutdown()
 {
 	releaseSound(bgm);
+	releaseSound(select);
 	m_pSystem->release();
 }
 
@@ -44,6 +45,7 @@ void SoundManagerC::init()
 
 	//create sound effects
 	createSound(&bgm, "./Sounds/bgm.wav");
+	createSound(&select, "./Sounds/hit.wav");
 }
 
 void SoundManagerC::createSound(FMOD::Sound **pSound, const char* pFile)
@@ -73,4 +75,9 @@ void SoundManagerC::releaseSound(FMOD::Sound *pSound)
 void SoundManagerC::playBGM()
 {
 	playSound(bgm, true);
+}
+
+void SoundManagerC::playSelectSFX()
+{
+	playSound(select, false);
 }

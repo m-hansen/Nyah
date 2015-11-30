@@ -20,9 +20,10 @@ private:
 	BulletWaveC **bulletWavePtrs;
 	static const int32_t MAX_NUM_WAVES = 7;
 	int32_t TIME_BETWEEN_WAVES;
+	int32_t VELOCITY;
 
 	DWORD mLastSpawnTime;
 	DWORD mLastSpeedIncreaseTime;
 	DWORD mCurrentTime;
 };
-#define INCREASE_SPAWN_SPEED_DELTA_TIME 5000
+#define INCREASE_SPAWN_SPEED_DELTA_TIME 2500

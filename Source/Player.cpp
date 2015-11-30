@@ -31,6 +31,8 @@ void PlayerC::init()
 	mRadius = INITIAL_RADIUS;
 	mOrigin.x = PLAYER_WIDTH / 2;
 	mOrigin.y = PLAYER_HEIGHT / 2;
+	animationFrameNo = 0;
+	rotateAnimationDirection = 1;
 	/*mCollRect.x = mPosition.x;
 	mCollRect.y = mPosition.y;
 	mCollRect.width = PLAYER_WIDTH;
@@ -44,14 +46,22 @@ void PlayerC::update(DWORD milliseconds)
 	{
 		mAngle += ANGLE_INCREMENT;
 		move(milliseconds);
+		rotateAnimationDirection = 1;
+		animationFrameNo += rotateAnimationDirection;
+		if (animationFrameNo > 3)
+			animationFrameNo = 0;
 	}
 
 	if (InputManagerC::GetInstance()->GetCounterClockwiseRotationButton())
 	{
 		mAngle -= ANGLE_INCREMENT;
 		move(milliseconds);
-	}
+		rotateAnimationDirection = -1;
+		animationFrameNo += rotateAnimationDirection;
+		if (animationFrameNo < 0)
+			animationFrameNo = 3;
 
+	}
 }
 
 void PlayerC::move(DWORD milliseconds)
@@ -69,7 +79,7 @@ void PlayerC::render()
 	GLfloat top = mPosition.y - mOrigin.y;
 	GLfloat bottom = mPosition.y + mOrigin.y;
 
-	SpriteManagerC::GetInstance()->renderPlayer(left, right, top, bottom);
+	SpriteManagerC::GetInstance()->renderPlayer(animationFrameNo, left - PLAYER_WIDTH/2, right - PLAYER_WIDTH/2, top - PLAYER_HEIGHT/2, bottom - PLAYER_HEIGHT/2);
 }
 //
 //CollisionRectangle* PlayerC::getCollisionRectangle()

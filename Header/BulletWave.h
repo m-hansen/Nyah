@@ -1,7 +1,7 @@
 class BulletWaveC
 {
 public:
-	BulletWaveC();
+	BulletWaveC(int32_t VELOCITY);
 	~BulletWaveC();
 	void update(DWORD milliseconds);
 	void render();
@@ -11,7 +11,6 @@ private:
 	BulletC *firstBullet;
 	uint32_t numBullets;
 	bool8_t waveAtCenter;
-	static const int32_t VELOCITY = -25;
 	static const int32_t NUM_BULLETS = 48;
 	static const int32_t BULLET_RADIUS = 135;
 };

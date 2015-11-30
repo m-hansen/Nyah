@@ -27,6 +27,7 @@ BulletManagerC *BulletManagerC::CreateInstance()
 void BulletManagerC::init()
 {
 	TIME_BETWEEN_WAVES = 1500;
+	VELOCITY = -25;
 	bulletWavePtrs = (BulletWaveC**)malloc(MAX_NUM_WAVES * sizeof(BulletWaveC*));
 	for (int32_t i = 0; i < MAX_NUM_WAVES; i++)
 	{
@@ -40,7 +41,7 @@ void BulletManagerC::spawnBulletWave()
 	{
 		if (bulletWavePtrs[i] == NULL)
 		{
-			bulletWavePtrs[i] = new BulletWaveC();
+			bulletWavePtrs[i] = new BulletWaveC(VELOCITY);
 			break;
 		}
 	}
@@ -88,7 +89,8 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 		mLastSpeedIncreaseTime = mCurrentTime;
 		if (TIME_BETWEEN_WAVES >= 700)
 		{
-			TIME_BETWEEN_WAVES -= 50;
+			TIME_BETWEEN_WAVES -= 150;
+			VELOCITY--;
 		}
 	}
 	for (uint32_t i = 0; i < MAX_NUM_WAVES; ++i)

@@ -31,6 +31,7 @@ BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t i
 	animationFrameNo = 0;
 	isAtCenter = false;
 	mColor = color;
+	animState = GLOWING;
 
 }
 
@@ -53,9 +54,12 @@ BulletC::~BulletC()
 
 void BulletC::move(DWORD milliseconds)
 {
-	float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime)/1000.0f;
-	mPosition.x += mVelocity.x * deltaTime;
-	mPosition.y += mVelocity.y * deltaTime;
+	if (animState == GLOWING)
+	{
+		float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime) / 1000.0f;
+		mPosition.x += mVelocity.x * deltaTime;
+		mPosition.y += mVelocity.y * deltaTime;
+	}
 }
 
 void BulletC::update(DWORD milliseconds)
@@ -68,9 +72,11 @@ void BulletC::update(DWORD milliseconds)
 void BulletC::doCollisions()
 {
 	if (mPosition.x < THRESHOLD && mPosition.x > -THRESHOLD
-		&& mPosition.y < THRESHOLD && mPosition.y > -THRESHOLD)
+		&& mPosition.y < THRESHOLD && mPosition.y > -THRESHOLD
+		&& animState != SHRINKING)
 	{
-		isAtCenter = true;
+		animState = SHRINKING;
+		animationFrameNo = 0;
 	}
 }
 
@@ -85,7 +91,7 @@ void BulletC::render()
 	GLfloat right = mPosition.x + (mRadius * 2.0f);
 	GLfloat top = mPosition.y;
 	GLfloat bottom = mPosition.y + (mRadius * 2.0f);
-	SpriteManagerC::GetInstance()->renderBullet(mColor, animationFrameNo, left, right, top, bottom, mRadius);
+	SpriteManagerC::GetInstance()->renderBullet(animState, mColor, animationFrameNo, left, right, top, bottom, mRadius);
 }
 
 void BulletC::updateAnimationFrame(DWORD milliseconds)
@@ -95,10 +101,20 @@ void BulletC::updateAnimationFrame(DWORD milliseconds)
 	if (mCurrentTime - mLastUpdateTime > ANIMATION_FRAME_UPDATE_DELTA_TIME)
 	{
 		mLastUpdateTime = mCurrentTime;
-		if (animationFrameNo < 7)
-			animationFrameNo++;
-		else
-			animationFrameNo = 0;
+		if (animState == GLOWING)
+		{
+			if (animationFrameNo < 7)
+				animationFrameNo++;
+			else
+				animationFrameNo = 0;
+		}
+		else if (animState == SHRINKING)
+		{
+			if (animationFrameNo < 4)
+				animationFrameNo++;
+			else
+				isAtCenter = true;
+		}
 	}
 }
 

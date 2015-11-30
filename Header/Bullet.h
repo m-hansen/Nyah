@@ -18,9 +18,10 @@ private:
 	bool8_t mAtRest;
 	bool8_t isAtCenter;
 	BulletColor mColor;
+	BulletAnimationState animState;
 
 	DWORD mLastUpdateTime;
 	DWORD mCurrentTime;
 };
 #define ANIMATION_FRAME_UPDATE_DELTA_TIME 100
-#define THRESHOLD 5.0
+#define THRESHOLD 10.0

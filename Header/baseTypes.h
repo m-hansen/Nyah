@@ -12,9 +12,15 @@ typedef short int16_t;
 typedef unsigned short uint16_t;
 typedef int bool8_t;
 
-enum BulletColor{
-	INVALID,
+enum BulletColor {
+	INVALID_COLOR,
 	RED,
 	BLUE,
-	MAX,
+	MAX_COLOR,
+};
+enum BulletAnimationState {
+	INVALID_ANIM_STATE,
+	GLOWING,
+	SHRINKING,
+	MAX_ANIM_STATE
 };

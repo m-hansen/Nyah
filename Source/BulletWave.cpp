@@ -15,10 +15,10 @@
 #include "BulletWave.h"
 #include "random.h"
 
-BulletWaveC::BulletWaveC()
+BulletWaveC::BulletWaveC(int32_t VELOCITY)
 {
 	float_t missingArcStartAngle = getRangedRandom(0, 270);
-	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX);
+	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	missingArcStartAngle *= RADIANS;
 	float_t x, y, theta;
 	bulletPtrs = (BulletC**)malloc(NUM_BULLETS * sizeof(BulletC*));

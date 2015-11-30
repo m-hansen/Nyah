@@ -14,6 +14,8 @@ private:
 
 	void move(DWORD milliseconds);
 
+	int32_t animationFrameNo;
+	int32_t rotateAnimationDirection;
 	float_t mRadius;
 	float_t mAngle;
 	Coord2D mOrigin;
@@ -26,3 +28,4 @@ private:
 #define PLAYER_WIDTH 100			// Player width
 #define PLAYER_HEIGHT 100			// Player height
 #define INITIAL_RADIUS 200.0f		// The radius the player rotates around
+#define ANIMATION_FRAME_UPDATE_DELTA_TIME 100	//how fast the player animation changes frames

@@ -84,6 +84,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 			if (InputManagerC::GetInstance()->GetStartButton())
 			{
 				StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+				SoundManagerC::GetInstance()->playSelectSFX();
 				SoundManagerC::GetInstance()->playBGM();
 			}
 			break;
