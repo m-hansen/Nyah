@@ -27,12 +27,12 @@ PlayerC *PlayerC::CreateInstance()
 
 void PlayerC::init()
 {
-	mPosition.x = 0.0f;
-	mPosition.y = 0.0f;
 	mVelocity.x = 0.0f;
 	mVelocity.y = 0.0f;
 	mAngle = 0.0f;
 	mRadius = INITIAL_RADIUS;
+	mPosition.x = 0.0f;
+	mPosition.y = mRadius;
 	mOrigin.x = PLAYER_WIDTH / 2;
 	mOrigin.y = PLAYER_HEIGHT / 2;
 	animationFrameNo = 0;
