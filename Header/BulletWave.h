@@ -22,3 +22,4 @@ private:
 };
 #define PI 3.1415926536
 #define RADIANS (PI/180.0);
+#define INITIAL_WAVE_RADIUS 3000.0f

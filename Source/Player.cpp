@@ -40,8 +40,8 @@ void PlayerC::init()
 	rotateAnimationDirection = 1;
 	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
 	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
-	mCollRect.width = PLAYER_WIDTH / 2;
-	mCollRect.height = PLAYER_HEIGHT / 2;
+	mCollRect.width = PLAYER_WIDTH;
+	mCollRect.height = PLAYER_HEIGHT;
 	bulletManagerInstance = BulletManagerC::GetInstance();
 }
 

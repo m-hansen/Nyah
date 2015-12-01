@@ -70,6 +70,7 @@ void CGame::reset()
 	StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 
 	SoundManagerC::GetInstance()->reset();
+	UIManagerC::GetInstance()->reset();
 }
 
 void CGame::UpdateFrame(DWORD milliseconds)			
@@ -93,6 +94,7 @@ void CGame::UpdateFrame(DWORD milliseconds)
 		case StateManagerC::PLAYING:
 			BulletManagerC::GetInstance()->updateBullets(milliseconds);
 			PlayerC::GetInstance()->update(milliseconds);
+			UIManagerC::GetInstance()->update(milliseconds);
 			if (InputManagerC::GetInstance()->GetResetButton())
 			{
 				CGame::GetInstance()->reset();
@@ -127,9 +129,11 @@ void CGame::DrawScene(void)
 		case StateManagerC::PLAYING:
 			BulletManagerC::GetInstance()->renderSprites();
 			PlayerC::GetInstance()->render();
+			UIManagerC::GetInstance()->renderScore();
 			break;
 		case StateManagerC::GAMEOVER:
 			UIManagerC::GetInstance()->renderGameOver();
+			UIManagerC::GetInstance()->renderScore();
 			break;
 	}
 }
