@@ -1,7 +1,7 @@
 #include <windows.h>											// Header File For Windows
 #include <gl/gl.h>														// Header File For The OpenGL32 Library
 #include <gl/glu.h>														// Header File For The GLu32 Library
-#include <gl\glut.h>
+#include <gl/glut.h>
 #include "openglframework.h"
 #include "baseTypes.h"
 #include "InputManager.h"
@@ -48,6 +48,15 @@ bool8_t InputManagerC::GetClockwiseRotationButton()
 bool8_t InputManagerC::GetCounterClockwiseRotationButton()
 {
 	if (g_keys->keyDown[VK_LEFT])
+	{
+		return true;
+	}
+	return false;
+}
+
+bool8_t InputManagerC::GetBackButton()
+{
+	if (g_keys->keyDown[VK_BACK])
 	{
 		return true;
 	}

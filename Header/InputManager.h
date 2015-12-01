@@ -11,6 +11,7 @@ public:
 	bool8_t GetResetButton();
 	bool8_t GetClockwiseRotationButton();
 	bool8_t GetCounterClockwiseRotationButton();
+	bool8_t InputManagerC::GetBackButton();
 	bool8_t InputManagerC::DebugPlayerKill();
 //checkout gameframework.cpp
 	Coord2D*					getCurrentMousePosition(){};
