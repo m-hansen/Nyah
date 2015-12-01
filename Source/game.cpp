@@ -67,7 +67,7 @@ void CGame::reset()
 	BulletManagerC::CreateInstance();
 	BulletManagerC::GetInstance()->init();
 	PlayerC::GetInstance()->init();
-	StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
+	StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
 
 	SoundManagerC::GetInstance()->reset();
 }
@@ -106,6 +106,10 @@ void CGame::UpdateFrame(DWORD milliseconds)
 			if (InputManagerC::GetInstance()->GetResetButton())
 			{
 				CGame::GetInstance()->reset();
+			}
+			if (InputManagerC::GetInstance()->GetBackButton())
+			{
+				StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 			}
 			break;
 	}
