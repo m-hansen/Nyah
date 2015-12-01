@@ -15,33 +15,26 @@ CollisionHandlerC* CollisionHandlerC::CreateInstance()
 bool CollisionHandlerC::CollisionOccuredRect(CollisionRectangle* rectA, CollisionRectangle* rectB)
 {
 	// Set the bounds for collider A
-	int leftA = rectA->position.x;
-	int rightA = rectA->position.x + rectA->width;
-	int topA = rectA->position.y;
-	int bottomA = rectA->position.y + rectA->height;
+	int32_t leftA = rectA->position.x;
+	int32_t rightA = rectA->position.x + rectA->width;
+	int32_t topA = rectA->position.y;
+	int32_t bottomA = rectA->position.y + rectA->height;
 
 	// Set the bounds for collider B
-	int leftB = rectB->position.x;
-	int rightB = rectB->position.x + rectB->width;
-	int topB = rectB->position.y;
-	int bottomB = rectB->position.y + rectB->height;
+	int32_t leftB = rectB->position.x;
+	int32_t rightB = rectB->position.x + rectB->width;
+	int32_t topB = rectB->position.y;
+	int32_t bottomB = rectB->position.y + rectB->height;
 
-	// Check for collision
-	// if any of these statements are true we know that there is a gap between 
-	// the two colliders on the horizontal or vertical axis
-	/*if ((bottomA <= topB) || (topA >= bottomB) || (rightA <= leftB) || (leftA >= rightB))
-	{
-		return false;
-	}*/
+	float_t playerPositionX = rectA->position.x - rectA->width / 2;
+	float_t playerPositionY = rectA->position.y - rectA->height / 2;
+	float_t bulletPositionX = rectB->position.x - rectB->width / 2;
+	float_t bulletPositionY = rectB->position.y - rectB->height / 2;
 
-	float player_x = rectA->position.x - rectA->width / 2;
-	float player_y = rectA->position.y - rectA->height / 2;
-	float bullet_x = rectB->position.x - rectB->width / 2;
-	float bullet_y = rectB->position.y - rectB->height / 2;
-
-	float distance = pow(player_x - bullet_x, 2) + pow(player_y - bullet_y, 2);
+	float_t distance = pow(playerPositionX - bulletPositionX, 2) + pow(playerPositionY - bulletPositionY, 2);
 	if (distance <= rectB->width + rectA->width)
 	{
+		// Overlap occured
 		return true;
 	}
 
