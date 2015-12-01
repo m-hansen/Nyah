@@ -25,6 +25,7 @@
 #include "BulletManager.h"
 #include "UIManager.h"
 #include "SoundManager.h"
+#include "CollisionHandler.h"
 #include "Player.h"
 
 // Declarations
@@ -47,6 +48,7 @@ void CGame::init()
 	UIManagerC::CreateInstance();
 	SoundManagerC::CreateInstance();
 	PlayerC::CreateInstance();
+	CollisionHandlerC::CreateInstance();
 
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();

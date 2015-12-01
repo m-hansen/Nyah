@@ -32,6 +32,7 @@ void BulletManagerC::init()
 	topOfBulletWaveList = NULL;
 	topOfBulletWaveList = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
 	topOfBulletWaveList->nextBulletWave = NULL;
+	hasStartedSpawning = false;
 }
 
 void BulletManagerC::spawnBulletWave()
@@ -42,6 +43,7 @@ void BulletManagerC::spawnBulletWave()
 	{
 		if (currentBulletWave->nextBulletWave == NULL)
 		{
+			hasStartedSpawning = true;
 			currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY);
 			currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
 			currentBulletWave = currentBulletWave->nextBulletWave;
@@ -118,4 +120,9 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 			topOfBulletWaveList = temp;
 		}
 	}
+}
+
+BulletWaveListT* BulletManagerC::getClosestBulletWave()
+{
+	return topOfBulletWaveList;
 }

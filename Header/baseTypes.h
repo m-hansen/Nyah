@@ -1,9 +1,3 @@
-typedef struct 
-{
-    float x;
-    float y;
-}Coord2D;
-
 typedef float float_t;
 typedef unsigned int uint32_t;
 typedef int int32_t;
@@ -18,9 +12,23 @@ enum BulletColor {
 	BLUE,
 	MAX_COLOR,
 };
+
 enum BulletAnimationState {
 	INVALID_ANIM_STATE,
 	GLOWING,
 	SHRINKING,
 	MAX_ANIM_STATE
 };
+
+typedef struct 
+{
+    float x;
+    float y;
+} Coord2D; 
+
+typedef struct 
+{
+	Coord2D position;
+	float_t width;
+	float_t height;
+} CollisionRectangle;

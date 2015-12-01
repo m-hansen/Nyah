@@ -9,6 +9,7 @@ public:
 	void doCollisions();
 	void move(DWORD milliseconds);
 	void updateAnimationFrame(DWORD milliseconds);
+	CollisionRectangle* getCollisionRectangle();
 	bool8_t getIsAtCenter();
 private:
 
@@ -19,6 +20,7 @@ private:
 	bool8_t isAtCenter;
 	BulletColor mColor;
 	BulletAnimationState animState;
+	CollisionRectangle mCollRect;
 
 	DWORD mLastUpdateTime;
 	DWORD mCurrentTime;

@@ -32,7 +32,10 @@ BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t i
 	isAtCenter = false;
 	mColor = color;
 	animState = GLOWING;
-
+	mCollRect.position.x = mPosition.x + mRadius;
+	mCollRect.position.y = mPosition.y + mRadius;
+	mCollRect.width = mRadius;
+	mCollRect.height = mRadius;
 }
 
 BulletC::BulletC()
@@ -59,6 +62,8 @@ void BulletC::move(DWORD milliseconds)
 		float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime) / 1000.0f;
 		mPosition.x += mVelocity.x * deltaTime;
 		mPosition.y += mVelocity.y * deltaTime;
+		mCollRect.position.x = mPosition.x + mRadius;
+		mCollRect.position.y = mPosition.y + mRadius;
 	}
 }
 
@@ -116,5 +121,10 @@ void BulletC::updateAnimationFrame(DWORD milliseconds)
 				isAtCenter = true;
 		}
 	}
+}
+
+CollisionRectangle* BulletC::getCollisionRectangle()
+{
+	return &mCollRect;
 }
 

@@ -13,6 +13,7 @@ public:
 	void update(DWORD milliseconds);
 	void render();
 	bool8_t getWaveAtCenter();
+	BulletListT* getTopOfBulletList();
 private:
 	BulletListT *topOfBulletList;
 	bool8_t waveAtCenter;

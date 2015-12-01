@@ -36,6 +36,7 @@ BulletWaveC::BulletWaveC(int32_t VELOCITY)
 			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color);
 			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
 			currentBullet = currentBullet->nextBullet;
+			
 		}
 	}
 	currentBullet->nextBullet = NULL;
@@ -82,4 +83,9 @@ void BulletWaveC::render()
 		currentBullet->bulletPtr->render();
 		currentBullet = currentBullet->nextBullet;
 	}
+}
+
+BulletListT* BulletWaveC::getTopOfBulletList()
+{
+	return topOfBulletList;
 }

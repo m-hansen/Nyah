@@ -20,6 +20,8 @@ public:
 	void	renderSprites();
 	void	shutdown();
 	void	reset();
+	BulletWaveListT* getClosestBulletWave();
+	bool8_t getHasStartedSpawning() { return hasStartedSpawning; };
 
 private:
 	static BulletManagerC *sInstance;
@@ -29,6 +31,7 @@ private:
 	static const int32_t MAX_NUM_WAVES = 7;
 	int32_t TIME_BETWEEN_WAVES;
 	int32_t VELOCITY;
+	bool8_t hasStartedSpawning;
 
 	DWORD mLastSpawnTime;
 	DWORD mLastSpeedIncreaseTime;

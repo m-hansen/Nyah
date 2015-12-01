@@ -9,7 +9,11 @@
 #include "Object.h"
 #include "SpriteManager.h"
 #include "InputManager.h"
-#include "CollisionRectangle.h"
+#include "CollisionHandler.h"
+#include "BulletManager.h"
+#include "BulletWave.h"
+#include "Bullet.h"
+#include "StateManager.h"
 #include "Player.h"
 
 PlayerC *PlayerC::sInstance = NULL;
@@ -33,10 +37,11 @@ void PlayerC::init()
 	mOrigin.y = PLAYER_HEIGHT / 2;
 	animationFrameNo = 0;
 	rotateAnimationDirection = 1;
-	/*mCollRect.x = mPosition.x;
-	mCollRect.y = mPosition.y;
-	mCollRect.width = PLAYER_WIDTH;
-	mCollRect.height = PLAYER_HEIGHT;*/
+	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
+	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
+	mCollRect.width = 1;
+	mCollRect.height = 1;
+	bulletManagerInstance = BulletManagerC::GetInstance();
 }
 
 void PlayerC::update(DWORD milliseconds)
@@ -48,8 +53,10 @@ void PlayerC::update(DWORD milliseconds)
 		move(milliseconds);
 		rotateAnimationDirection = 1;
 		animationFrameNo += rotateAnimationDirection;
-		if (animationFrameNo > 3)
-			animationFrameNo = 0;
+		if (animationFrameNo > LAST_ANIM_FRAME)
+		{
+			animationFrameNo = FIRST_ANIM_FRAME;
+		}
 	}
 
 	if (InputManagerC::GetInstance()->GetCounterClockwiseRotationButton())
@@ -58,9 +65,35 @@ void PlayerC::update(DWORD milliseconds)
 		move(milliseconds);
 		rotateAnimationDirection = -1;
 		animationFrameNo += rotateAnimationDirection;
-		if (animationFrameNo < 0)
-			animationFrameNo = 3;
+		if (animationFrameNo < FIRST_ANIM_FRAME)
+		{
+			animationFrameNo = LAST_ANIM_FRAME;
+		}
+	}
 
+	checkForCollision();
+}
+
+void PlayerC::checkForCollision()
+{
+	BulletWaveListT* closestWave = bulletManagerInstance->getClosestBulletWave();
+	if (!bulletManagerInstance->getHasStartedSpawning())
+	{
+		return;
+	}
+	BulletListT* topOfBulletList = closestWave->bulletWavePtr->getTopOfBulletList();
+
+	while (topOfBulletList->nextBullet != NULL)
+	{
+		BulletC* bullet = topOfBulletList->bulletPtr;
+		bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet->getCollisionRectangle());
+		if (isGameOver)
+		{
+			StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+			return;
+		}
+		
+		topOfBulletList = topOfBulletList->nextBullet;
 	}
 }
 
@@ -68,8 +101,8 @@ void PlayerC::move(DWORD milliseconds)
 {
 	mPosition.x = mOrigin.x + sin(mAngle) * mRadius;
 	mPosition.y = mOrigin.y + cos(mAngle) * mRadius;
-	/*mCollRect.x = mPosition.x;
-	mCollRect.y = mPosition.y;*/
+	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
+	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
 }
 
 void PlayerC::render()
@@ -81,8 +114,8 @@ void PlayerC::render()
 
 	SpriteManagerC::GetInstance()->renderPlayer(animationFrameNo, left - PLAYER_WIDTH/2, right - PLAYER_WIDTH/2, top - PLAYER_HEIGHT/2, bottom - PLAYER_HEIGHT/2);
 }
-//
-//CollisionRectangle* PlayerC::getCollisionRectangle()
-//{
-//	return &mCollRect;
-//}
+
+CollisionRectangle* PlayerC::getCollisionRectangle()
+{
+	return &mCollRect;
+}

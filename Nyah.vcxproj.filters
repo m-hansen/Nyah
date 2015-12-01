@@ -129,9 +129,6 @@
     <ClInclude Include="Header\stateManager.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Header\types.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="gl\glut.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -148,9 +145,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\CollisionHandler.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\CollisionRectangle.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
