@@ -39,8 +39,8 @@ void PlayerC::init()
 	rotateAnimationDirection = 1;
 	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
 	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
-	mCollRect.width = 1;
-	mCollRect.height = 1;
+	mCollRect.width = PLAYER_WIDTH / 2;
+	mCollRect.height = PLAYER_HEIGHT / 2;
 	bulletManagerInstance = BulletManagerC::GetInstance();
 }
 
@@ -76,24 +76,30 @@ void PlayerC::update(DWORD milliseconds)
 
 void PlayerC::checkForCollision()
 {
-	BulletWaveListT* closestWave = bulletManagerInstance->getClosestBulletWave();
+	BulletWaveListT* bulleteWaves = bulletManagerInstance->getClosestBulletWave();
 	if (!bulletManagerInstance->getHasStartedSpawning())
 	{
 		return;
 	}
-	BulletListT* topOfBulletList = closestWave->bulletWavePtr->getTopOfBulletList();
 
-	while (topOfBulletList->nextBullet != NULL)
+	while (bulleteWaves->nextBulletWave != NULL)
 	{
-		BulletC* bullet = topOfBulletList->bulletPtr;
-		bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet->getCollisionRectangle());
-		if (isGameOver)
+		BulletListT* topOfBulletList = bulleteWaves->bulletWavePtr->getTopOfBulletList();
+
+		while (topOfBulletList->nextBullet != NULL)
 		{
-			StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
-			return;
+			BulletC* bullet = topOfBulletList->bulletPtr;
+			bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet->getCollisionRectangle());
+			if (isGameOver)
+			{
+				StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+				return;
+			}
+
+			topOfBulletList = topOfBulletList->nextBullet;
 		}
-		
-		topOfBulletList = topOfBulletList->nextBullet;
+
+		bulleteWaves = bulleteWaves->nextBulletWave;
 	}
 }
 

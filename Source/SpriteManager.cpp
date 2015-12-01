@@ -188,8 +188,8 @@ void SpriteManagerC::renderPlayer(int32_t animationFrameNo, GLfloat left, GLfloa
 
 void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
 {
-	glPushMatrix();
-	glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	//glPushMatrix();
+	//glRotatef(angle, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glBegin(GL_QUADS);
@@ -209,7 +209,7 @@ void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)
 	glVertex3f(quad.xLeft, quad.yBottom, 0.0);
 
 	glEnd();
-	glPopMatrix();
+	//glPopMatrix();
 }
 
 void SpriteManagerC::OGL_Render2(struct RenderData quad, GLuint textureID)
