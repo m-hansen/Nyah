@@ -20,6 +20,14 @@ enum BulletAnimationState {
 	MAX_ANIM_STATE
 };
 
+enum BulletWaveType {
+	INVALID_BULLET_WAVE,
+	RING,
+	SPIRAL,
+	ZIGZAG,
+	MAX_BULLET_WAVE
+};
+
 typedef struct 
 {
     float x;

@@ -20,7 +20,7 @@
 #include "stateManager.h"
 #include "inputmanager.h"
 
-BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color)
+BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color, float_t theta)
 {
 
 	mPosition.x = initPosX;
@@ -32,8 +32,8 @@ BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t i
 	isAtCenter = false;
 	mColor = color;
 	animState = GLOWING;
-	mCollRect.position.x = mPosition.x + mRadius;
-	mCollRect.position.y = mPosition.y + mRadius;
+	mCollRect.position.x = mPosition.x;
+	mCollRect.position.y = mPosition.y;
 	mCollRect.width = mRadius;
 	mCollRect.height = mRadius;
 }
@@ -62,8 +62,8 @@ void BulletC::move(DWORD milliseconds)
 		float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime) / 1000.0f;
 		mPosition.x += mVelocity.x * deltaTime;
 		mPosition.y += mVelocity.y * deltaTime;
-		mCollRect.position.x = mPosition.x + mRadius;
-		mCollRect.position.y = mPosition.y + mRadius;
+		mCollRect.position.x = mPosition.x;
+		mCollRect.position.y = mPosition.y;
 	}
 }
 

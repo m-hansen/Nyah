@@ -26,7 +26,9 @@ BulletManagerC *BulletManagerC::CreateInstance()
 
 void BulletManagerC::init()
 {
-	TIME_BETWEEN_WAVES = 1500;
+	TIME_BETWEEN_RINGS = 1500;
+	TIME_BETWEEN_SPIRALS = 4000;
+	TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
 	VELOCITY = -25;
 
 	topOfBulletWaveList = NULL;
@@ -44,7 +46,24 @@ void BulletManagerC::spawnBulletWave()
 		if (currentBulletWave->nextBulletWave == NULL)
 		{
 			hasStartedSpawning = true;
-			currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY);
+			int32_t waveTypeChance = getRangedRandom(0, 10);
+			BulletWaveType waveType;
+			if (waveTypeChance > 7)
+			{
+				waveType = SPIRAL;
+				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
+			}
+			else if(waveTypeChance > 5)
+			{
+				waveType = ZIGZAG;
+				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
+			}
+			else
+			{
+				waveType = RING;
+				TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
+			}
+			currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY, waveType);
 			currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
 			currentBulletWave = currentBulletWave->nextBulletWave;
 			currentBulletWave->nextBulletWave = NULL;
@@ -97,9 +116,9 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 	if (mCurrentTime - mLastSpeedIncreaseTime > INCREASE_SPAWN_SPEED_DELTA_TIME)
 	{
 		mLastSpeedIncreaseTime = mCurrentTime;
-		if (TIME_BETWEEN_WAVES >= 700)
+		if (TIME_BETWEEN_RINGS >= 700)
 		{
-			TIME_BETWEEN_WAVES -= 150;
+			TIME_BETWEEN_RINGS -= 150;
 			VELOCITY--;
 		}
 	}

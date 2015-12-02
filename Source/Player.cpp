@@ -38,8 +38,8 @@ void PlayerC::init()
 	mOrigin.y = PLAYER_HEIGHT / 2;
 	animationFrameNo = 0;
 	rotateAnimationDirection = 1;
-	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
-	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
+	mCollRect.position.x = mPosition.x;
+	mCollRect.position.y = mPosition.y;
 	mCollRect.width = PLAYER_WIDTH;
 	mCollRect.height = PLAYER_HEIGHT;
 	bulletManagerInstance = BulletManagerC::GetInstance();
@@ -117,8 +117,8 @@ void PlayerC::move(DWORD milliseconds)
 {
 	mPosition.x = mOrigin.x + sin(mAngle) * mRadius;
 	mPosition.y = mOrigin.y + cos(mAngle) * mRadius;
-	mCollRect.position.x = mPosition.x + (PLAYER_WIDTH / 2);
-	mCollRect.position.y = mPosition.y + (PLAYER_HEIGHT / 2);
+	mCollRect.position.x = mPosition.x;
+	mCollRect.position.y = mPosition.y;
 }
 
 // Render the player sprite

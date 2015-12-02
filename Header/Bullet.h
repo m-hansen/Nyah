@@ -2,7 +2,7 @@ class BulletC : public ObjectC
 {
 public:
 	BulletC();
-	BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color);
+	BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color, float_t theta);
 	~BulletC();
 	void update(DWORD milliseconds);
 	virtual void render();
@@ -15,6 +15,7 @@ private:
 
 	bool8_t mEnabled;
 	float_t mRadius;
+	float_t mTheta;
 	int32_t animationFrameNo;
 	bool8_t mAtRest;
 	bool8_t isAtCenter;

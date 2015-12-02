@@ -30,6 +30,8 @@ private:
 	BulletWaveListT *topOfBulletWaveList;
 	static const int32_t MAX_NUM_WAVES = 7;
 	int32_t TIME_BETWEEN_WAVES;
+	int32_t TIME_BETWEEN_SPIRALS;
+	int32_t TIME_BETWEEN_RINGS;
 	int32_t VELOCITY;
 	bool8_t hasStartedSpawning;
 

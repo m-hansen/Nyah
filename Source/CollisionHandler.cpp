@@ -15,18 +15,25 @@ CollisionHandlerC* CollisionHandlerC::CreateInstance()
 bool CollisionHandlerC::CollisionOccuredRect(CollisionRectangle* rectA, CollisionRectangle* rectB)
 {
 	// Set the bounds for collider A
-	int32_t leftA = rectA->position.x;
-	int32_t rightA = rectA->position.x + rectA->width;
-	int32_t topA = rectA->position.y;
-	int32_t bottomA = rectA->position.y + rectA->height;
+	int32_t leftA = rectA->position.x + rectA->width/2 - 5;
+	int32_t rightA = rectA->position.x + rectA->width/2 + 5;
+	int32_t bottomA = rectA->position.y + rectA->height/2 - 5;
+	int32_t topA = rectA->position.y + rectA->height/2 + 5;
 
 	// Set the bounds for collider B
-	int32_t leftB = rectB->position.x;
-	int32_t rightB = rectB->position.x + rectB->width;
-	int32_t topB = rectB->position.y;
-	int32_t bottomB = rectB->position.y + rectB->height;
+	int32_t leftB = rectB->position.x + rectB->width/4;
+	int32_t rightB = rectB->position.x + 3 * rectB->width/4;
+	int32_t bottomB = rectB->position.y + rectB->height/4;
+	int32_t topB = rectB->position.y + 3 * rectB->height/4;
 
-	float_t playerPositionX = rectA->position.x - rectA->width / 2;
+	if ((bottomA > topB) || (bottomB > topA) || (rightA < leftB) || (rightB < leftA))
+	{
+		return false;
+	}
+
+	return true;
+
+	/*float_t playerPositionX = rectA->position.x - rectA->width / 2;
 	float_t playerPositionY = rectA->position.y - rectA->height / 2;
 	float_t bulletPositionX = rectB->position.x - rectB->width / 2;
 	float_t bulletPositionY = rectB->position.y - rectB->height / 2;
@@ -39,5 +46,5 @@ bool CollisionHandlerC::CollisionOccuredRect(CollisionRectangle* rectA, Collisio
 	}
 
 	// An overlap did not occur
-	return false;
+	return false;*/
 }
