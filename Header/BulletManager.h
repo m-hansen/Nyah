@@ -39,4 +39,4 @@ private:
 	DWORD mLastSpeedIncreaseTime;
 	DWORD mCurrentTime;
 };
-#define INCREASE_SPAWN_SPEED_DELTA_TIME 2500
+#define INCREASE_SPAWN_SPEED_DELTA_TIME 3000

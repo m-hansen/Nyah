@@ -82,7 +82,7 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 		}
 	}
 
-	initRadius += 600;
+	initRadius += 800;
 	missingArcStartAngle = 215 * RADIANS;
 	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	for (int32_t i = 0; i < NUM_BULLETS; i++)
@@ -100,7 +100,7 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 		}
 	}
 
-	initRadius += 600;
+	initRadius += 800;
 	missingArcStartAngle = 90 * RADIANS;
 	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	for (int32_t i = 0; i < NUM_BULLETS; i++)
@@ -118,7 +118,7 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 		}
 	}
 
-	initRadius += 600;
+	initRadius += 800;
 	missingArcStartAngle = 215 * RADIANS;
 	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	for (int32_t i = 0; i < NUM_BULLETS; i++)

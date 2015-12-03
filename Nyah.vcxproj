@@ -103,6 +103,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="PhaseManager.cpp" />
     <ClCompile Include="Source\CollisionHandler.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
@@ -126,6 +128,7 @@
     <ClCompile Include="Source\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameTime.h" />
     <ClInclude Include="Header\BulletWave.h" />
     <ClInclude Include="gl\glut.h" />
     <ClInclude Include="Header\ball.h" />
@@ -153,6 +156,7 @@
     <ClInclude Include="lib\SOIL.h" />
     <ClInclude Include="Header\SoundManager.h" />
     <ClInclude Include="Header\UIManager.h" />
+    <ClInclude Include="PhaseManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

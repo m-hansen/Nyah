@@ -12,6 +12,7 @@
 #include "openglframework.h"	
 #include "gamedefs.h"
 #include "spriteManager.h"
+#include "PhaseManager.h"
 #include "random.h"
 
 #include "soil.h"
@@ -79,7 +80,23 @@ void SpriteManagerC::update(DWORD milliseconds)
 		{
 			rotationDirection *= -1;
 		}
-		angle += rotationDirection * 1.25f;
+
+		float_t rotationSpeed = 0.0f;
+		switch (PhaseManagerC::GetInstance()->getPhase())
+		{
+			case Phase::NYAH_TWO:
+				rotationSpeed = ROT_SPEED_SLOW;
+				break;
+			case Phase::NYAH_THREE:
+			case Phase::NYAH_FOUR:
+				rotationSpeed = ROT_SPEED_MEDIUM;
+				break;
+			case Phase::NYAH_FIVE:
+				rotationSpeed = ROT_SPEED_FAST;
+				break;
+		}
+
+		angle += rotationDirection * rotationSpeed;
 	}
 
 }

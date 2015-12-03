@@ -64,6 +64,12 @@
     <ClCompile Include="Source\CollisionHandler.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="GameTime.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PhaseManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\ball.h">
@@ -145,6 +151,12 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\CollisionHandler.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTime.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="PhaseManager.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

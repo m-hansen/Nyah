@@ -2,6 +2,8 @@
 #define MEDIUM_BUFFER 32
 #define LARGE_BUFFER 64
 
+class PhaseManagerC;
+
 class UIManagerC
 {
 public:
@@ -10,12 +12,10 @@ public:
 	~UIManagerC() {};
 
 	void init();
-	void update(DWORD milliseconds);
 	void renderLogo();
 	void renderScore();
 	void renderGameOver();
-	void UIManagerC::OGL_Render();
-	void reset();
+	void renderPhaseText();
 
 private:
 	static UIManagerC *sInstance;
@@ -25,9 +25,5 @@ private:
 	char8_t startPrompt[MEDIUM_BUFFER];
 	char8_t gameOverText[MEDIUM_BUFFER];
 	char8_t restartPrompt[MEDIUM_BUFFER];
-
-	DWORD totalTime;
-	DWORD mCurrentTime;
-	DWORD mLastUpdateTime;
-
+	PhaseManagerC* mCachedPhaseManager;
 };

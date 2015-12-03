@@ -13,6 +13,7 @@
 #include "object.h"
 #include "BulletWave.h"
 #include "BulletManager.h"
+#include "PhaseManager.h"
 #include "random.h"
 
 BulletManagerC* BulletManagerC::sInstance = NULL;
@@ -48,12 +49,12 @@ void BulletManagerC::spawnBulletWave()
 			hasStartedSpawning = true;
 			int32_t waveTypeChance = getRangedRandom(0, 10);
 			BulletWaveType waveType;
-			if (waveTypeChance > 7)
+			if (waveTypeChance > 7 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_THREE)
 			{
 				waveType = SPIRAL;
 				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
 			}
-			else if(waveTypeChance > 5)
+			else if(waveTypeChance > 6 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_FOUR)
 			{
 				waveType = ZIGZAG;
 				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
@@ -118,7 +119,7 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 		mLastSpeedIncreaseTime = mCurrentTime;
 		if (TIME_BETWEEN_RINGS >= 700)
 		{
-			TIME_BETWEEN_RINGS -= 150;
+			TIME_BETWEEN_RINGS -= 100;
 			VELOCITY--;
 		}
 	}

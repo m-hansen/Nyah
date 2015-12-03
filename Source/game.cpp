@@ -3,9 +3,9 @@
 #include <stdio.h>												// Header File For Standard Input / Output
 #include <stdarg.h>												// Header File For Variable Argument Routines
 #include <math.h>												// Header File For Math Operations
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl\glut.h>
+#include <gl/gl.h>												// Header File For The OpenGL32 Library
+#include <gl/glu.h>												// Header File For The GLu32 Library
+#include <gl/glut.h>
 #include "baseTypes.h"
 #include "openglframework.h"	
 #include "gamedefs.h"
@@ -26,6 +26,8 @@
 #include "UIManager.h"
 #include "SoundManager.h"
 #include "CollisionHandler.h"
+#include "PhaseManager.h"
+#include "GameTime.h"
 #include "Player.h"
 
 // Declarations
@@ -33,7 +35,7 @@ const char8_t CGame::mGameTitle[]="Nyah";
 CGame* CGame::sInstance=NULL;
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any OpenGL Initialization Goes Here
 {
-	initOpenGLDrawing(window,keys,0.0f, 0.0f, 0.0f);
+	initOpenGLDrawing(window, keys, 0.0f, 0.0f, 0.0f);
 	CGame::CreateInstance();
 	CGame::GetInstance()->init();
 	return TRUE;						
@@ -45,15 +47,19 @@ void CGame::init()
 	InputManagerC::CreateInstance();
 	SpriteManagerC::CreateInstance();
 	BulletManagerC::CreateInstance();
+	PhaseManagerC::CreateInstance();
 	UIManagerC::CreateInstance();
 	SoundManagerC::CreateInstance();
 	PlayerC::CreateInstance();
 	CollisionHandlerC::CreateInstance();
-
+	GameTimeC::CreateInstance();
+	
+	GameTimeC::GetInstance()->reset();
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();
 	StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 	SpriteManagerC::GetInstance()->init();
+	PhaseManagerC::GetInstance()->init();
 	UIManagerC::GetInstance()->init();
 	SoundManagerC::GetInstance()->init();
 	PlayerC::GetInstance()->init();
@@ -63,20 +69,26 @@ void CGame::reset()
 {
 	BulletManagerC::GetInstance()->shutdown();
 	BulletManagerC::GetInstance()->reset();
-
 	BulletManagerC::CreateInstance();
 	BulletManagerC::GetInstance()->init();
+
 	PlayerC::GetInstance()->init();
-	StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+	PhaseManagerC::GetInstance()->init();
 
 	SoundManagerC::GetInstance()->reset();
-	UIManagerC::GetInstance()->reset();
+	//UIManagerC::GetInstance()->reset();
+	GameTimeC::GetInstance()->reset();
+
+	StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+
+	// Start timers and music
+	GameTimeC::GetInstance()->start();
+	SoundManagerC::GetInstance()->playBGM();
 }
 
 void CGame::UpdateFrame(DWORD milliseconds)			
 {
 	keyProcess();
-//	InputManagerC::GetInstance()->update(milliseconds);
 
 	// Update frame, regardless of state
 	SpriteManagerC::GetInstance()->update(milliseconds);
@@ -86,19 +98,15 @@ void CGame::UpdateFrame(DWORD milliseconds)
 		case StateManagerC::TITLE:
 			if (InputManagerC::GetInstance()->GetStartButton())
 			{
-				StateManagerC::GetInstance()->setState(StateManagerC::PLAYING);
+				CGame::GetInstance()->reset();
 				SoundManagerC::GetInstance()->playSelectSFX();
-				SoundManagerC::GetInstance()->playBGM();
 			}
 			break;
 		case StateManagerC::PLAYING:
+			GameTimeC::GetInstance()->update(milliseconds);
 			BulletManagerC::GetInstance()->updateBullets(milliseconds);
 			PlayerC::GetInstance()->update(milliseconds);
-			UIManagerC::GetInstance()->update(milliseconds);
-			if (InputManagerC::GetInstance()->GetResetButton())
-			{
-				CGame::GetInstance()->reset();
-			}
+			PhaseManagerC::GetInstance()->update(milliseconds);
 			if (InputManagerC::GetInstance()->DebugPlayerKill())
 			{
 				StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
@@ -163,5 +171,6 @@ void CGame::DestroyGame(void)
 	delete PlayerC::GetInstance();
 	delete InputManagerC::GetInstance();
 	delete SoundManagerC::GetInstance();
+	delete PhaseManagerC::GetInstance();
 	delete UIManagerC::GetInstance();
 }

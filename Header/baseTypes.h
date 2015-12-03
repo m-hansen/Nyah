@@ -28,6 +28,16 @@ enum BulletWaveType {
 	MAX_BULLET_WAVE
 };
 
+enum Phase {
+	INVALID_PHASE,
+	NYAH_ONE,
+	NYAH_TWO,
+	NYAH_THREE,
+	NYAH_FOUR,
+	NYAH_FIVE,
+	MAX_PHASE
+};
+
 typedef struct 
 {
     float x;
