@@ -64,10 +64,10 @@
     <ClCompile Include="Source\CollisionHandler.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="GameTime.cpp">
+    <ClCompile Include="Source\GameTime.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="PhaseManager.cpp">
+    <ClCompile Include="Source\PhaseManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,10 +153,10 @@
     <ClInclude Include="Header\CollisionHandler.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="GameTime.h">
+    <ClInclude Include="Header\GameTime.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="PhaseManager.h">
+    <ClInclude Include="Header\PhaseManager.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
