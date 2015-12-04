@@ -18,13 +18,16 @@ SoundManagerC *SoundManagerC::CreateInstance()
 void SoundManagerC::reset()
 {
 	releaseSound(bgm);
-	createSound(&bgm, "./Sounds/bgm.wav");
+	createSound(&bgm, "./Sounds/bgm_first.mp3");
+	releaseSound(bgm2);
+	createSound(&bgm2, "./Sounds/otis.mp3");
 }
 
 void SoundManagerC::shutdown()
 {
 	releaseSound(bgm);
 	releaseSound(select);
+	releaseSound(bgm2);
 	m_pSystem->release();
 }
 
@@ -44,7 +47,8 @@ void SoundManagerC::init()
 	m_pSystem->init(36, FMOD_INIT_NORMAL, NULL);
 
 	//create sound effects
-	createSound(&bgm, "./Sounds/bgm.wav");
+	createSound(&bgm, "./Sounds/bgm_first.mp3");
+	createSound(&bgm2, "./Sounds/otis.mp3");
 	createSound(&select, "./Sounds/hit.wav");
 }
 
@@ -74,7 +78,12 @@ void SoundManagerC::releaseSound(FMOD::Sound *pSound)
 
 void SoundManagerC::playBGM()
 {
-	playSound(bgm, true);
+	playSound(bgm, false);
+}
+
+void SoundManagerC::playBGM2()
+{
+	playSound(bgm2, true);
 }
 
 void SoundManagerC::playSelectSFX()

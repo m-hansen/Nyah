@@ -2,6 +2,7 @@
 #include "baseTypes.h"
 #include "GameTime.h"
 #include "PhaseManager.h"
+#include "SoundManager.h"
 
 PhaseManagerC* PhaseManagerC::sInstance = NULL;
 
@@ -21,7 +22,16 @@ void PhaseManagerC::init()
 void PhaseManagerC::update(DWORD milliseconds)
 {
 	mCurrentTime = GameTimeC::GetInstance()->getCurrentTimeInSeconds();
-	if (mCurrentTime >= PHASE_FIVE_BEGIN)
+	if (mCurrentTime >= PHASE_SEVEN_BEGIN)
+	{
+		mPhase = NYAH_SEVEN;
+	}
+	else if (mCurrentTime >= PHASE_SIX_BEGIN)
+	{
+		mPhase = NYAH_SIX;
+		SoundManagerC::GetInstance()->playBGM2();
+	}
+	else if (mCurrentTime >= PHASE_FIVE_BEGIN)
 	{
 		mPhase = NYAH_FIVE;
 	}

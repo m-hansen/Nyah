@@ -83,13 +83,13 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 	}
 
 	initRadius += 800;
-	missingArcStartAngle = 215 * RADIANS;
+	missingArcStartAngle = 180 * RADIANS;
 	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	for (int32_t i = 0; i < NUM_BULLETS; i++)
 	{
 		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
 		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI / 2.0f))
+		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
 		{
 			//use polar coordinates to determine where along the circle to spawn the bullet
 			x = initRadius * cos(theta);
@@ -107,7 +107,7 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 	{
 		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
 		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI / 2.0f))
+		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
 		{
 			//use polar coordinates to determine where along the circle to spawn the bullet
 			x = initRadius * cos(theta);
@@ -119,13 +119,13 @@ void BulletWaveC::createZigZagRing(int32_t VELOCITY)
 	}
 
 	initRadius += 800;
-	missingArcStartAngle = 215 * RADIANS;
+	missingArcStartAngle = 180 * RADIANS;
 	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	for (int32_t i = 0; i < NUM_BULLETS; i++)
 	{
 		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
 		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI / 2.0f))
+		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
 		{
 			//use polar coordinates to determine where along the circle to spawn the bullet
 			x = initRadius * cos(theta);

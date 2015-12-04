@@ -15,16 +15,16 @@ CollisionHandlerC* CollisionHandlerC::CreateInstance()
 bool CollisionHandlerC::CollisionOccuredRect(CollisionRectangle* rectA, CollisionRectangle* rectB)
 {
 	// Set the bounds for collider A
-	int32_t leftA = rectA->position.x + rectA->width/2 - 5;
-	int32_t rightA = rectA->position.x + rectA->width/2 + 5;
-	int32_t bottomA = rectA->position.y + rectA->height/2 - 5;
-	int32_t topA = rectA->position.y + rectA->height/2 + 5;
+	int32_t leftA = rectA->position.x + rectA->width/2 - 1;
+	int32_t rightA = rectA->position.x + rectA->width/2 + 1;
+	int32_t bottomA = rectA->position.y + rectA->height/2 - 1;
+	int32_t topA = rectA->position.y + rectA->height/2 + 1;
 
 	// Set the bounds for collider B
-	int32_t leftB = rectB->position.x + rectB->width/4;
-	int32_t rightB = rectB->position.x + 3 * rectB->width/4;
-	int32_t bottomB = rectB->position.y + rectB->height/4;
-	int32_t topB = rectB->position.y + 3 * rectB->height/4;
+	int32_t leftB = rectB->position.x + rectB->width/3;
+	int32_t rightB = rectB->position.x + 2 * rectB->width/3;
+	int32_t bottomB = rectB->position.y + rectB->height/3;
+	int32_t topB = rectB->position.y + 2 * rectB->height/3;
 
 	if ((bottomA > topB) || (bottomB > topA) || (rightA < leftB) || (rightB < leftA))
 	{

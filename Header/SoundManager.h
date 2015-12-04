@@ -14,6 +14,7 @@ public:
 	void playSound(FMOD::Sound* pSound, bool bLoop);
 	void releaseSound(FMOD::Sound* pSound);
 	void playBGM();
+	void playBGM2();
 	void playSelectSFX();
 	void shutdown();
 
@@ -23,5 +24,6 @@ private:
 
 	FMOD::System *m_pSystem;
 	FMOD::Sound* bgm;
+	FMOD::Sound* bgm2;
 	FMOD::Sound* select;
 };

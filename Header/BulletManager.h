@@ -30,7 +30,7 @@ private:
 	BulletWaveListT *topOfBulletWaveList;
 	static const int32_t MAX_NUM_WAVES = 7;
 	int32_t TIME_BETWEEN_WAVES;
-	int32_t TIME_BETWEEN_SPIRALS;
+	int32_t TIME_BETWEEN_PATTERNS;
 	int32_t TIME_BETWEEN_RINGS;
 	int32_t VELOCITY;
 	bool8_t hasStartedSpawning;
@@ -40,3 +40,6 @@ private:
 	DWORD mCurrentTime;
 };
 #define INCREASE_SPAWN_SPEED_DELTA_TIME 3000
+#define TIME_BETWEEN_PATTERNS_EASY 4000
+#define TIME_BETWEEN_PATTERNS_HARD 3000
+#define VELOCITY_HARD -35

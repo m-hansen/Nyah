@@ -35,6 +35,8 @@ enum Phase {
 	NYAH_THREE,
 	NYAH_FOUR,
 	NYAH_FIVE,
+	NYAH_SIX,
+	NYAH_SEVEN,
 	MAX_PHASE
 };
 

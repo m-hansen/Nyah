@@ -91,7 +91,7 @@ void SpriteManagerC::update(DWORD milliseconds)
 			case Phase::NYAH_FOUR:
 				rotationSpeed = ROT_SPEED_MEDIUM;
 				break;
-			case Phase::NYAH_FIVE:
+			case Phase::NYAH_SEVEN:
 				rotationSpeed = ROT_SPEED_FAST;
 				break;
 		}
@@ -118,10 +118,20 @@ void SpriteManagerC::renderBackground()
 	quad.yBottom = 2048.0f;
 
 	//Set color
-	quad.r = 0xFF - colorStep;
-	quad.g = 0x00;
-	quad.b = colorStep;
-	quad.a = 0xFF;
+	if ((int32_t)PhaseManagerC::GetInstance()->getPhase() >= (int32_t)Phase::NYAH_SIX)
+	{
+		quad.r = 0xFF;
+		quad.g = 0x00;
+		quad.b = 0x00;
+		quad.a = 0xFF;
+	}
+	else
+	{
+		quad.r = 0x00;
+		quad.g = 0xFF - colorStep;
+		quad.b = colorStep;
+		quad.a = 0xFF;
+	}
 
 	OGL_Render2(quad, mBackgroundTexture);
 }

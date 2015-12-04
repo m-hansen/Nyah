@@ -28,7 +28,7 @@ BulletManagerC *BulletManagerC::CreateInstance()
 void BulletManagerC::init()
 {
 	TIME_BETWEEN_RINGS = 1500;
-	TIME_BETWEEN_SPIRALS = 4000;
+	TIME_BETWEEN_PATTERNS = TIME_BETWEEN_PATTERNS_EASY;
 	TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
 	VELOCITY = -25;
 
@@ -42,37 +42,40 @@ void BulletManagerC::spawnBulletWave()
 {
 	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
 
-	while (true)
+	if (PhaseManagerC::GetInstance()->getPhase() != NYAH_FIVE && PhaseManagerC::GetInstance()->getPhase() != NYAH_SIX)
 	{
-		if (currentBulletWave->nextBulletWave == NULL)
+		while (true)
 		{
-			hasStartedSpawning = true;
-			int32_t waveTypeChance = getRangedRandom(0, 10);
-			BulletWaveType waveType;
-			if (waveTypeChance > 7 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_THREE)
+			if (currentBulletWave->nextBulletWave == NULL)
 			{
-				waveType = SPIRAL;
-				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
-			}
-			else if(waveTypeChance > 6 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_FOUR)
-			{
-				waveType = ZIGZAG;
-				TIME_BETWEEN_WAVES = TIME_BETWEEN_SPIRALS;
+				hasStartedSpawning = true;
+				int32_t waveTypeChance = getRangedRandom(0, 10);
+				BulletWaveType waveType;
+				if (waveTypeChance > 7 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_THREE)
+				{
+					waveType = SPIRAL;
+					TIME_BETWEEN_WAVES = TIME_BETWEEN_PATTERNS;
+				}
+				else if (waveTypeChance > 6 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_FOUR)
+				{
+					waveType = ZIGZAG;
+					TIME_BETWEEN_WAVES = TIME_BETWEEN_PATTERNS;
+				}
+				else
+				{
+					waveType = RING;
+					TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
+				}
+				currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY, waveType);
+				currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
+				currentBulletWave = currentBulletWave->nextBulletWave;
+				currentBulletWave->nextBulletWave = NULL;
+				break;
 			}
 			else
 			{
-				waveType = RING;
-				TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
+				currentBulletWave = currentBulletWave->nextBulletWave;
 			}
-			currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY, waveType);
-			currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
-			currentBulletWave = currentBulletWave->nextBulletWave;
-			currentBulletWave->nextBulletWave = NULL;
-			break;
-		}
-		else
-		{
-			currentBulletWave = currentBulletWave->nextBulletWave;
 		}
 	}
 }
@@ -109,6 +112,11 @@ void BulletManagerC::renderSprites()
 void BulletManagerC::updateBullets(DWORD milliseconds)
 {
 	mCurrentTime += milliseconds;
+	if (PhaseManagerC::GetInstance()->getPhase() == Phase::NYAH_SEVEN)
+	{
+		VELOCITY = VELOCITY_HARD;
+		TIME_BETWEEN_PATTERNS = TIME_BETWEEN_PATTERNS_HARD;
+	}
 	if (mCurrentTime - mLastSpawnTime > TIME_BETWEEN_WAVES)
 	{
 		mLastSpawnTime = mCurrentTime;
@@ -119,7 +127,7 @@ void BulletManagerC::updateBullets(DWORD milliseconds)
 		mLastSpeedIncreaseTime = mCurrentTime;
 		if (TIME_BETWEEN_RINGS >= 700)
 		{
-			TIME_BETWEEN_RINGS -= 100;
+			TIME_BETWEEN_RINGS -= 150;
 			VELOCITY--;
 		}
 	}
