@@ -28,6 +28,7 @@
 #include "CollisionHandler.h"
 #include "PhaseManager.h"
 #include "GameTime.h"
+#include "HighScores.h"
 #include "Player.h"
 
 // Declarations
@@ -53,7 +54,9 @@ void CGame::init()
 	PlayerC::CreateInstance();
 	CollisionHandlerC::CreateInstance();
 	GameTimeC::CreateInstance();
+	HighScoresC::CreateInstance();
 	
+	HighScoresC::GetInstance()->init();
 	GameTimeC::GetInstance()->reset();
 	InputManagerC::GetInstance()->init();
 	BulletManagerC::GetInstance()->init();

@@ -13,6 +13,7 @@
 #include "GameTime.h"
 #include "random.h"
 #include "soil.h"
+#include "HighScores.h"
 #include "UIManager.h"
 
 UIManagerC* UIManagerC::sInstance = NULL;
@@ -35,33 +36,8 @@ void UIManagerC::init()
 
 void UIManagerC::renderScore()
 {
-	char8_t minutesString[SMALL_BUFFER];
-	char8_t secondsString[SMALL_BUFFER];
-	char8_t millisString[SMALL_BUFFER];
 	char8_t timerString[LARGE_BUFFER];
-	memset(timerString, 0x00, strlen(timerString));
-
-	DWORD currentTime = GameTimeC::GetInstance()->getCurrentTime();
-	int32_t millis = (currentTime % 1000) / 10;
-	int32_t seconds = (currentTime / 1000) % 60;
-	int32_t minutes = (currentTime / 1000) / 60;
-	itoa(millis, millisString, 10);
-	itoa(seconds, secondsString, 10);
-	itoa(minutes, minutesString, 10);
-
-	strcat(timerString, minutesString);
-	strcat(timerString, ":");
-	if (seconds < 10)
-	{
-		strcat(timerString, "0");
-	}
-	strcat(timerString, secondsString);
-	strcat(timerString, ":");
-	if (millis < 10)
-	{
-		strcat(timerString, "0");
-	}
-	strcat(timerString, millisString);
+	formatTime(GameTimeC::GetInstance()->getCurrentTime(), timerString);
 
 	int32_t lengthOfString = (int32_t)strlen(timerString);
 	glDisable(GL_LIGHTING);
@@ -71,7 +47,7 @@ void UIManagerC::renderScore()
 	glPushMatrix();
 	glScalef(1.0f, 1.0f, 1.0f);
 	glTranslatef(-(lengthOfString * 52), 1800.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, timerString[i]);
@@ -90,7 +66,7 @@ void UIManagerC::renderLogo()
 	glPushMatrix();
 	glScalef(4.0f, 4.0f, 4.0f);
 	glTranslatef(-(lengthOfString * 52), 100.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, title[i]);
@@ -101,7 +77,7 @@ void UIManagerC::renderLogo()
 	glPushMatrix();
 	lengthOfString = (int32_t)strlen(startPrompt);
 	glTranslatef(-(lengthOfString * 52), -500.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, startPrompt[i]);
@@ -120,19 +96,42 @@ void UIManagerC::renderGameOver()
 	glPushMatrix();
 	glScalef(4.0f, 4.0f, 4.0f);
 
-	glTranslatef(-(lengthOfString * 52), 100.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	glTranslatef(-(lengthOfString * 52), 200.0f, 0.0f);
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, gameOverText[i]);
 	}
 	glPopMatrix();
 
+	// Display high scores
+	DWORD* scores = HighScoresC::GetInstance()->getHighScores();
+	int32_t numScores = HighScoresC::GetInstance()->getMaxNumberOfHighScores();
+	int32_t vertPadding = 140;
+	for (int32_t i = 0; i < numScores; i++)
+	{
+		char floatBuffer[MEDIUM_BUFFER];
+		formatTime(scores[i], floatBuffer);
+
+		lengthOfString = (int32_t)strlen(floatBuffer);
+
+		glPushMatrix();
+		glScalef(1.0f, 1.0f, 1.0f);
+
+		glTranslatef(-(lengthOfString * 52), 300.0f - (vertPadding * i), 0.0f);
+		for (int32_t j = 0; j < lengthOfString; j++)
+		{
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, floatBuffer[j]);
+		}
+		glPopMatrix();
+	}
+	
 	// Restart prompt
 	glPushMatrix();
 	lengthOfString = (int32_t)strlen(restartPrompt);
-	glTranslatef(-(lengthOfString * 52), -500.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	glTranslatef(-(lengthOfString * 52), -1500.0f, 0.0f);
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, restartPrompt[i]);
@@ -144,7 +143,7 @@ void UIManagerC::renderGameOver()
 
 void UIManagerC::renderPhaseText()
 {
-	char phaseText[MEDIUM_BUFFER] = "";
+	char8_t phaseText[MEDIUM_BUFFER] = "";
 	PhaseManagerC::GetInstance()->getPhaseAsString(phaseText);
 
 	int32_t lengthOfString = (int32_t)strlen(phaseText);
@@ -154,11 +153,44 @@ void UIManagerC::renderPhaseText()
 	glPushMatrix();
 	glScalef(1.0f, 1.0f, 1.0f);
 	glTranslatef(-(lengthOfString * 52), 0.0f, 0.0f);
-	for (int i = 0; i < lengthOfString; i++)
+	for (int32_t i = 0; i < lengthOfString; i++)
 	{
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, phaseText[i]);
 	}
 	glPopMatrix();
 	glEnable(GL_TEXTURE_2D);
+}
+
+void UIManagerC::formatTime(DWORD time, char8_t* formattedTime)
+{
+	char8_t minutesString[SMALL_BUFFER];
+	char8_t secondsString[SMALL_BUFFER];
+	char8_t millisString[SMALL_BUFFER];
+	char8_t timerString[LARGE_BUFFER];
+	memset(timerString, 0x00, strlen(timerString));
+
+	int32_t millis = (time % 1000) / 10;
+	int32_t seconds = (time / 1000) % 60;
+	int32_t minutes = (time / 1000) / 60;
+	itoa(millis, millisString, 10);
+	itoa(seconds, secondsString, 10);
+	itoa(minutes, minutesString, 10);
+
+	strcat(timerString, minutesString);
+	strcat(timerString, ":");
+	if (seconds < 10)
+	{
+		strcat(timerString, "0");
+	}
+	strcat(timerString, secondsString);
+	strcat(timerString, ":");
+	if (millis < 10)
+	{
+		strcat(timerString, "0");
+	}
+
+	strcat(timerString, millisString);
+
+	strcpy(formattedTime, timerString);
 }

@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HighScores.cpp" />
     <ClCompile Include="Source\GameTime.cpp" />
     <ClCompile Include="Source\PhaseManager.cpp" />
     <ClCompile Include="Source\CollisionHandler.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Header\ShapeDraw.h" />
     <ClInclude Include="Header\SpriteManager.h" />
     <ClInclude Include="Header\stateManager.h" />
+    <ClInclude Include="HighScores.h" />
     <ClInclude Include="lib\glut.h" />
     <ClInclude Include="lib\SOIL.h" />
     <ClInclude Include="Header\SoundManager.h" />

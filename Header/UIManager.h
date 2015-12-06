@@ -16,6 +16,7 @@ public:
 	void renderScore();
 	void renderGameOver();
 	void renderPhaseText();
+	void formatTime(DWORD time, char8_t* formattedTime);
 
 private:
 	static UIManagerC *sInstance;

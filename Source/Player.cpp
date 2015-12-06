@@ -14,6 +14,7 @@
 #include "BulletWave.h"
 #include "Bullet.h"
 #include "StateManager.h"
+#include "HighScores.h"
 #include "Player.h"
 
 PlayerC *PlayerC::sInstance = NULL;
@@ -100,6 +101,9 @@ void PlayerC::checkForCollision()
 			bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet->getCollisionRectangle());
 			if (isGameOver)
 			{
+				// Game over, check for high score
+				HighScoresC::GetInstance()->determineIfHighScore();
+
 				// Player collided with bullet, end game
 				StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
 				return;

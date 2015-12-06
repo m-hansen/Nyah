@@ -70,6 +70,9 @@
     <ClCompile Include="Source\PhaseManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="HighScores.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\ball.h">
@@ -157,6 +160,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\PhaseManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScores.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
