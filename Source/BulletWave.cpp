@@ -1,232 +1,113 @@
-//#include <assert.h>
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <math.h>												// Header File For Math Operations
-#include <gl/glut.h>
-#include <gl/gl.h>												// Header File For The OpenGL32 Library
-#include <gl/glu.h>												// Header File For The GLu32 Library
-#include "baseTypes.h"
-#include "openglframework.h"	
-#include "gamedefs.h"
-#include "collinfo.h"
-#include "object.h"
-#include "Bullet.h"
-#include "BulletWave.h"
-#include "random.h"
+#include "pch.h"
 
-BulletWaveC::BulletWaveC(int32_t VELOCITY, BulletWaveType waveType)
+#pragma region Wave Builder
+
+BulletWaveC WaveBuilderC::operator()(float_t gapAngle, float_t gapSize, int32_t numBullets)
 {
-	switch (waveType)
+	BulletWaveC wave;
+
+	int32_t initRadius = INITIAL_WAVE_RADIUS;
+
+	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
+	float_t x, y, z, theta;
+
+	//create our list of bullets
+	for (int32_t i = 0; i < numBullets; i++)
 	{
-		case SPIRAL: createSpiral(VELOCITY); break;
-		case RING: createRing(VELOCITY); break;
-		case ZIGZAG: createZigZagRing(VELOCITY); break;
+		theta = (i * 360.0 / numBullets) * RADIANS;
+		//make sure the angle along the circle is not in the range of the gap
+		if (theta <= gapAngle || theta > gapAngle + gapSize)
+		{
+			//use polar coordinates to determine where along the circle to spawn the bullet
+			x = initRadius * cos(theta);
+			y = initRadius * sin(theta);
+			wave.AddBullet(BulletC(x, y, cos(theta), sin(theta), BulletWaveC::sBulletRadius, color, theta));
+		}
 	}
+
+	return wave;
 }
 
-void BulletWaveC::createRing(int32_t VELOCITY)
+BulletWaveC WaveBuilderC::operator()(bool clockwise)
 {
-	float_t missingArcStartAngle = getRangedRandom(0, 270) * RADIANS;
+	BulletWaveC wave;
 	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
 	float_t x, y, theta;
 
 	//create our list of bullets
-	topOfBulletList = NULL;
-	topOfBulletList = (BulletListT*)malloc(sizeof(BulletList));
-	BulletListT* currentBullet = topOfBulletList;
-	currentBullet->nextBullet = NULL;
 	int32_t initRadius = INITIAL_WAVE_RADIUS;
-	for (int32_t i = 0; i < NUM_BULLETS; i++)
+	for (int32_t i = 0; i < BulletWaveC::sNumBulletsSpiral; i++)
 	{
-		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
-		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI / 2.0f))
+		if (clockwise)
 		{
-			//use polar coordinates to determine where along the circle to spawn the bullet
-			x = initRadius * cos(theta);
-			y = initRadius * sin(theta);
-			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-			currentBullet = currentBullet->nextBullet;
-		}
-	}
-	currentBullet->nextBullet = NULL;
-	waveAtCenter = false;
-}
-
-void BulletWaveC::createZigZagRing(int32_t VELOCITY)
-{
-	float_t missingArcStartAngle = 90 * RADIANS;
-	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	float_t x, y, theta;
-
-	//create our list of bullets
-	topOfBulletList = NULL;
-	topOfBulletList = (BulletListT*)malloc(sizeof(BulletList));
-	BulletListT* currentBullet = topOfBulletList;
-	currentBullet->nextBullet = NULL;
-	int32_t initRadius = INITIAL_WAVE_RADIUS;
-	for (int32_t i = 0; i < NUM_BULLETS; i++)
-	{
-		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
-		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
-		{
-		//use polar coordinates to determine where along the circle to spawn the bullet
-			x = initRadius * cos(theta);
-			y = initRadius * sin(theta);
-			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-			currentBullet = currentBullet->nextBullet;
-		}
-	}
-
-	initRadius += 800;
-	missingArcStartAngle = 180 * RADIANS;
-	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	for (int32_t i = 0; i < NUM_BULLETS; i++)
-	{
-		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
-		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
-		{
-			//use polar coordinates to determine where along the circle to spawn the bullet
-			x = initRadius * cos(theta);
-			y = initRadius * sin(theta);
-			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-			currentBullet = currentBullet->nextBullet;
-		}
-	}
-
-	initRadius += 800;
-	missingArcStartAngle = 90 * RADIANS;
-	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	for (int32_t i = 0; i < NUM_BULLETS; i++)
-	{
-		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
-		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
-		{
-			//use polar coordinates to determine where along the circle to spawn the bullet
-			x = initRadius * cos(theta);
-			y = initRadius * sin(theta);
-			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-			currentBullet = currentBullet->nextBullet;
-		}
-	}
-
-	initRadius += 800;
-	missingArcStartAngle = 180 * RADIANS;
-	color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	for (int32_t i = 0; i < NUM_BULLETS; i++)
-	{
-		theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
-		//make sure the angle along the circle is not in the range of the gap
-		if (theta <= missingArcStartAngle || theta > missingArcStartAngle + (PI/2.0f))
-		{
-			//use polar coordinates to determine where along the circle to spawn the bullet
-			x = initRadius * cos(theta);
-			y = initRadius * sin(theta);
-			currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-			currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-			currentBullet = currentBullet->nextBullet;
-		}
-	}
-
-	currentBullet->nextBullet = NULL;
-	waveAtCenter = false;
-}
-
-void BulletWaveC::createSpiral(int32_t VELOCITY)
-{
-	int32_t directionChance = getRangedRandom(0, 2);
-	BulletColor color = (BulletColor)getRangedRandom((int32_t)RED, (int32_t)MAX_COLOR);
-	float_t x, y, theta;
-
-	//create our list of bullets
-	topOfBulletList = NULL;
-	topOfBulletList = (BulletListT*)malloc(sizeof(BulletList));
-	BulletListT* currentBullet = topOfBulletList;
-	currentBullet->nextBullet = NULL;
-	int32_t initRadius = INITIAL_WAVE_RADIUS;
-	for (int32_t i = 0; i < NUM_BULLETS_SPIRAL; i++)
-	{
-		if (directionChance == 0)
-		{
-			theta = (i * 360.0 / NUM_BULLETS) * RADIANS;
+			theta = (i * 360.0 / BulletWaveC::sNumBulletsRing) * RADIANS;
 		}
 		else
 		{
-			theta = ((NUM_BULLETS_SPIRAL - i) * 360.0 / NUM_BULLETS) * RADIANS;
+			theta = ((BulletWaveC::sNumBulletsSpiral - i) * 360.0 / BulletWaveC::sNumBulletsRing) * RADIANS;
 		}
 		//use polar coordinates to determine where along the circle to spawn the bullet
 		x = initRadius * cos(theta);
 		y = initRadius * sin(theta);
-		currentBullet->bulletPtr = new BulletC(x, y, VELOCITY * cos(theta), VELOCITY * sin(theta), BULLET_RADIUS, color, theta);
-		currentBullet->nextBullet = (BulletListT*)malloc(sizeof(BulletList));
-		currentBullet = currentBullet->nextBullet;
-		initRadius += 30;
+		wave.AddBullet(BulletC(x, y, cos(theta), sin(theta), BulletWaveC::sBulletRadius, color, theta));
+		initRadius += 40;
 	}
-	currentBullet->nextBullet = NULL;
-	waveAtCenter = false;
+	return wave;
 }
+
+#pragma endregion
+
+BulletWaveC::BulletWaveC()
+{
+	mBullets = SList<BulletC>();
+	mWaveAtCenter = false;
+}
+
+void BulletWaveC::AddBullet(BulletC bullet)
+{
+	mBullets.PushBack(bullet);
+}
+
 
 BulletWaveC::~BulletWaveC()
 {
-	BulletListT* currentBullet = topOfBulletList;
-	while (currentBullet->nextBullet != NULL)
-	{
-		BulletListT* temp = currentBullet;
-		delete temp->bulletPtr;
-		currentBullet = currentBullet->nextBullet;
-		free(temp);
-	}
-	topOfBulletList = NULL;
+
 }
 
 bool8_t BulletWaveC::getWaveAtCenter()
 {
-	return waveAtCenter;
+	return mWaveAtCenter;
 }
 
-void BulletWaveC::update(DWORD milliseconds)
+void BulletWaveC::update(DWORD milliseconds, float_t velocity)
 {
-	BulletListT* currentBullet = topOfBulletList;
-	while (currentBullet->nextBullet != NULL)
+	for (auto& bullet : mBullets)
 	{
-		currentBullet->bulletPtr->update(milliseconds);
-		currentBullet = currentBullet->nextBullet;
+		bullet.update(milliseconds, velocity);
 	}
-	if (topOfBulletList->nextBullet != NULL)
+
+	if (!mBullets.IsEmpty())
 	{
-		if (topOfBulletList->bulletPtr->getIsAtCenter())
+		if (mBullets.Front().getIsAtCenter())
 		{
-			BulletListT* temp = topOfBulletList->nextBullet;
-			delete topOfBulletList->bulletPtr;
-			free(topOfBulletList);
-			topOfBulletList = temp;
+			mBullets.PopFront();
 		}
 	}
 	else
 	{
-		waveAtCenter = true;
+		mWaveAtCenter = true;
 	}
 }
 
 void BulletWaveC::render()
 {
-	BulletListT* currentBullet = topOfBulletList;
-	while (currentBullet->nextBullet != NULL)
+	for (auto& bullet : mBullets)
 	{
-		currentBullet->bulletPtr->render();
-		currentBullet = currentBullet->nextBullet;
+		bullet.render();
 	}
 }
 
-BulletListT* BulletWaveC::getTopOfBulletList()
+SList<BulletC>& BulletWaveC::getBullets()
 {
-	return topOfBulletList;
+	return mBullets;
 }

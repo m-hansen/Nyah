@@ -69,6 +69,8 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glut32.lib;soil.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -92,6 +94,8 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -103,18 +107,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Source\GameTime.cpp" />
     <ClCompile Include="Source\PhaseManager.cpp" />
     <ClCompile Include="Source\CollisionHandler.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\BulletWave.cpp" />
-    <ClCompile Include="Source\ball.cpp" />
-    <ClCompile Include="Source\BallManager.cpp" />
     <ClCompile Include="Source\Bullet.cpp" />
     <ClCompile Include="Source\BulletManager.cpp" />
-    <ClCompile Include="Source\field.cpp" />
-    <ClCompile Include="Source\FieldManager.cpp" />
     <ClCompile Include="Source\game.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\keyProcess.cpp" />
@@ -122,24 +128,22 @@
     <ClCompile Include="Source\openGLFramework.cpp" />
     <ClCompile Include="Source\openGLStuff.cpp" />
     <ClCompile Include="Source\random.cpp" />
-    <ClCompile Include="Source\ShapeDraw.cpp" />
     <ClCompile Include="Source\SpriteManager.cpp" />
     <ClCompile Include="Source\stateManager.cpp" />
     <ClCompile Include="Source\UIManager.cpp" />
+    <ClCompile Include="Source\WavePattern.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\DifficultyPreset.h" />
+    <ClInclude Include="Header\HashMap.h" />
     <ClInclude Include="Header\GameTime.h" />
     <ClInclude Include="Header\BulletWave.h" />
     <ClInclude Include="gl\glut.h" />
-    <ClInclude Include="Header\ball.h" />
-    <ClInclude Include="Header\BallManager.h" />
     <ClInclude Include="Header\baseTypes.h" />
     <ClInclude Include="Header\Bullet.h" />
     <ClInclude Include="Header\BulletManager.h" />
     <ClInclude Include="Header\collInfo.h" />
     <ClInclude Include="Header\CollisionHandler.h" />
-    <ClInclude Include="Header\field.h" />
-    <ClInclude Include="Header\FieldManager.h" />
     <ClInclude Include="Header\game.h" />
     <ClInclude Include="Header\gamedefs.h" />
     <ClInclude Include="Header\gameObjects.h" />
@@ -149,7 +153,7 @@
     <ClInclude Include="Header\openGLStuff.h" />
     <ClInclude Include="Header\Player.h" />
     <ClInclude Include="Header\random.h" />
-    <ClInclude Include="Header\ShapeDraw.h" />
+    <ClInclude Include="Header\SList.h" />
     <ClInclude Include="Header\SpriteManager.h" />
     <ClInclude Include="Header\stateManager.h" />
     <ClInclude Include="lib\glut.h" />
@@ -157,6 +161,16 @@
     <ClInclude Include="Header\SoundManager.h" />
     <ClInclude Include="Header\UIManager.h" />
     <ClInclude Include="Header\PhaseManager.h" />
+    <ClInclude Include="Header\pch.h" />
+    <ClInclude Include="Header\Queue.h" />
+    <ClInclude Include="Header\vector.h" />
+    <ClInclude Include="Header\WavePattern.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Header\HashMap.inl" />
+    <None Include="Header\SList.inl" />
+    <None Include="Header\Queue.inl" />
+    <None Include="Header\vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

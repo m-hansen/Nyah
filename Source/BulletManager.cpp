@@ -1,20 +1,4 @@
-#include <assert.h>
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <math.h>												// Header File For Math Operations
-#include <gl/glut.h>
-#include <gl/gl.h>												// Header File For The OpenGL32 Library
-#include <gl/glu.h>												// Header File For The GLu32 Library
-#include "baseTypes.h"
-#include "openglframework.h"	
-#include "gamedefs.h"
-#include "collinfo.h"
-#include "object.h"
-#include "BulletWave.h"
-#include "BulletManager.h"
-#include "PhaseManager.h"
-#include "random.h"
+#include "pch.h"
 
 BulletManagerC* BulletManagerC::sInstance = NULL;
 
@@ -25,72 +9,204 @@ BulletManagerC *BulletManagerC::CreateInstance()
 	return sInstance;
 }
 
+BulletManagerC::BulletManagerC() :
+	mBulletWaves(), mWaveMap(), mPatternMap(), mWaveQueue()
+{}
+
 void BulletManagerC::init()
 {
-	TIME_BETWEEN_RINGS = 1500;
-	TIME_BETWEEN_PATTERNS = TIME_BETWEEN_PATTERNS_EASY;
-	TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
-	VELOCITY = -25;
+#pragma region Create Wave Types
 
-	topOfBulletWaveList = NULL;
-	topOfBulletWaveList = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
-	topOfBulletWaveList->nextBulletWave = NULL;
-	hasStartedSpawning = false;
+	static WaveBuilderC waveBuilder;
+	uint32_t start = static_cast<uint32_t>(RING_00_DEG);
+	uint32_t end = static_cast<uint32_t>(RING_270_DEG);
+	float_t counter = 0.0f;
+	for (uint32_t i = start; i <= end; i++)
+	{
+		float angle = (counter * 90.0f) * RADIANS;
+		counter += 1.0f;
+		mWaveMap.Insert(WavePairType(static_cast<BulletWaveType>(i), waveBuilder(angle, PI / 2.0f, BulletWaveC::sNumBulletsRing)));
+	}
+
+	start = static_cast<uint32_t>(CRES_0_DEG);
+	end = static_cast<uint32_t>(CRES_330_DEG);
+	counter = 0.0f;
+	for (uint32_t i = start; i <= end; ++i)
+	{
+		float angle = (counter * 30.0f) * RADIANS;
+		counter += 1.0f;
+		mWaveMap.Insert(WavePairType(static_cast<BulletWaveType>(i), waveBuilder(angle, PI, BulletWaveC::sNumBulletsCrescent)));
+	}
+
+	mWaveMap.Insert(WavePairType(SPIRAL_CLOCK, waveBuilder(true)));
+	mWaveMap.Insert(WavePairType(SPIRAL_CNT_CLOCK, waveBuilder(false)));
+
+#pragma endregion
+	
+	switch (CGame::GetMode())
+	{
+		case DifficultyMode::EASY: initEasy(); break;
+		case DifficultyMode::MEDIUM: initMedium(); break;
+		case DifficultyMode::HARD: initHard(); break;
+	}
+
+	mVelocity = CGame::GetPresets().velocity;
+	mWaiting = true;
 }
 
-void BulletManagerC::spawnBulletWave()
+void BulletManagerC::initEasy()
 {
-	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
+#pragma region Create Patterns
 
-	if (PhaseManagerC::GetInstance()->getPhase() != NYAH_FIVE && PhaseManagerC::GetInstance()->getPhase() != NYAH_SIX)
+	mPatternMap.Insert(PatternPairType(SINGLE_RING_1, WavePatternC({
+		RING_00_DEG
+	}, WavePatternC::sTimeBetweenRingsEasy)));
+
+	mPatternMap.Insert(PatternPairType(SINGLE_RING_2, WavePatternC({
+		RING_90_DEG
+	}, WavePatternC::sTimeBetweenRingsEasy)));
+
+	mPatternMap.Insert(PatternPairType(SINGLE_RING_3, WavePatternC({
+		RING_180_DEG
+	}, WavePatternC::sTimeBetweenRingsEasy)));
+
+	mPatternMap.Insert(PatternPairType(SINGLE_RING_4, WavePatternC({
+		RING_270_DEG
+	}, WavePatternC::sTimeBetweenRingsEasy)));
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_EASY_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenSpecialEasy)));
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_EASY_2, WavePatternC({
+		RING_90_DEG, RING_270_DEG, RING_90_DEG
+	}, WavePatternC::sTimeBetweenSpecialEasy)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_EASY_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_180_DEG
+	}, WavePatternC::sTimeBetweenSpecialEasy)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_EASY_2, WavePatternC({
+		RING_180_DEG, RING_90_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenSpecialEasy)));
+
+#pragma endregion
+}
+
+void BulletManagerC::initMedium()
+{
+#pragma region Create Patterns
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_MEDIUM_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_00_DEG, RING_90_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_MEDIUM_2, WavePatternC({
+		RING_90_DEG, RING_270_DEG, RING_90_DEG, RING_270_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_MEDIUM_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_180_DEG, RING_270_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_MEDIUM_2, WavePatternC({
+		RING_270_DEG, RING_180_DEG, RING_90_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(FLIP_MEDIUM_1, WavePatternC({
+		RING_00_DEG, RING_180_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(FLIP_MEDIUM_2, WavePatternC({
+		RING_90_DEG, RING_270_DEG
+	}, WavePatternC::sTimeBetweenRingsMedium)));
+
+	mPatternMap.Insert(PatternPairType(SPIRAL_MEDIUM_1, WavePatternC({
+		SPIRAL_CLOCK
+	}, WavePatternC::sTimeBetweenSpiralsMedium)));
+
+	mPatternMap.Insert(PatternPairType(SPIRAL_MEDIUM_2, WavePatternC({
+		SPIRAL_CNT_CLOCK
+	}, WavePatternC::sTimeBetweenSpiralsMedium)));
+
+#pragma endregion
+}
+
+void BulletManagerC::initHard()
+{
+#pragma region Create Patterns
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_HARD_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_00_DEG, RING_90_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenRingsHard)));
+
+	mPatternMap.Insert(PatternPairType(ALTERNATOR_HARD_2, WavePatternC({
+		RING_90_DEG, RING_270_DEG, RING_90_DEG, RING_270_DEG, RING_90_DEG
+	}, WavePatternC::sTimeBetweenRingsHard)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_HARD_1, WavePatternC({
+		RING_00_DEG, RING_90_DEG, RING_180_DEG, RING_270_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenRingsHard)));
+
+	mPatternMap.Insert(PatternPairType(SEQUENTIAL_HARD_2, WavePatternC({
+		RING_00_DEG, RING_270_DEG, RING_180_DEG, RING_90_DEG, RING_00_DEG
+	}, WavePatternC::sTimeBetweenRingsHard)));
+
+	mPatternMap.Insert(PatternPairType(FLIP_HARD_1, WavePatternC({
+		RING_00_DEG, RING_180_DEG, RING_00_DEG, RING_180_DEG
+	}, WavePatternC::sTimeBetweenFlipsHard)));
+
+	mPatternMap.Insert(PatternPairType(FLIP_HARD_2, WavePatternC({
+		RING_90_DEG, RING_270_DEG, RING_90_DEG, RING_270_DEG
+	}, WavePatternC::sTimeBetweenFlipsHard)));
+
+	mPatternMap.Insert(PatternPairType(SPIRAL_HARD_1, WavePatternC({
+		SPIRAL_CLOCK, SPIRAL_CNT_CLOCK
+	}, WavePatternC::sTimeBetweenSpiralsHard)));
+
+	mPatternMap.Insert(PatternPairType(SPIRAL_HARD_2, WavePatternC({
+		SPIRAL_CNT_CLOCK, SPIRAL_CLOCK
+	}, WavePatternC::sTimeBetweenSpiralsHard)));
+
+	mPatternMap.Insert(PatternPairType(FLURRY_HARD_1, WavePatternC({
+		CRES_0_DEG, CRES_180_DEG, CRES_0_DEG, CRES_60_DEG,
+		CRES_150_DEG, CRES_180_DEG, CRES_0_DEG, CRES_90_DEG,
+		CRES_180_DEG, CRES_90_DEG, CRES_180_DEG, CRES_0_DEG,
+		CRES_90_DEG, CRES_150_DEG, CRES_0_DEG, CRES_90_DEG
+	}, WavePatternC::sTimeBetweenCrescentsHard)));
+
+#pragma endregion
+}
+
+void BulletManagerC::LoadPattern()
+{
+	int32_t result;
+	PatternType patternType;
+
+	result = getRangedRandom(CGame::GetPresets().start, CGame::GetPresets().end);
+	patternType = static_cast<PatternType>(result);
+	WavePatternC& pattern = mPatternMap[patternType];
+
+	for (auto& wave : pattern.GetWaveTypes())
 	{
-		while (true)
-		{
-			if (currentBulletWave->nextBulletWave == NULL)
-			{
-				hasStartedSpawning = true;
-				int32_t waveTypeChance = getRangedRandom(0, 10);
-				BulletWaveType waveType;
-				if (waveTypeChance > 7 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_THREE)
-				{
-					waveType = SPIRAL;
-					TIME_BETWEEN_WAVES = TIME_BETWEEN_PATTERNS;
-				}
-				else if (waveTypeChance > 6 && PhaseManagerC::GetInstance()->getPhase() >= NYAH_FOUR)
-				{
-					waveType = ZIGZAG;
-					TIME_BETWEEN_WAVES = TIME_BETWEEN_PATTERNS;
-				}
-				else
-				{
-					waveType = RING;
-					TIME_BETWEEN_WAVES = TIME_BETWEEN_RINGS;
-				}
-				currentBulletWave->bulletWavePtr = new BulletWaveC(VELOCITY, waveType);
-				currentBulletWave->nextBulletWave = (BulletWaveListT*)malloc(sizeof(BulletWaveList));
-				currentBulletWave = currentBulletWave->nextBulletWave;
-				currentBulletWave->nextBulletWave = NULL;
-				break;
-			}
-			else
-			{
-				currentBulletWave = currentBulletWave->nextBulletWave;
-			}
-		}
+		mWaveQueue.Push(wave);
+	}
+
+	mCurrentWavePattern = pattern;
+}
+
+void BulletManagerC::SpawnWave()
+{
+	if (!mWaveQueue.IsEmpty())
+	{
+		mBulletWaves.PushBack(mWaveMap[mWaveQueue.Top()]);
+		mWaveQueue.Pop();
 	}
 }
 
 void BulletManagerC::shutdown()
 {
-	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
-	while (currentBulletWave->nextBulletWave != NULL)
-	{
-		BulletWaveListT* temp = currentBulletWave;
-		delete temp->bulletWavePtr;
-		currentBulletWave = currentBulletWave->nextBulletWave;
-		free(temp);
-	}
-	topOfBulletWaveList = NULL;
+
 }
 
 void BulletManagerC::reset()
@@ -101,56 +217,63 @@ void BulletManagerC::reset()
 
 void BulletManagerC::renderSprites()
 {
-	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
-	while (currentBulletWave->nextBulletWave != NULL)
+	for (auto& bulletWave : mBulletWaves)
 	{
-		currentBulletWave->bulletWavePtr->render();
-		currentBulletWave = currentBulletWave->nextBulletWave;
+		bulletWave.render();
 	}
+}
+
+SList<BulletWaveC>& BulletManagerC::getBulletWaves()
+{
+	return mBulletWaves;
 }
 
 void BulletManagerC::updateBullets(DWORD milliseconds)
 {
+	if (PhaseManagerC::GetInstance()->getPhase() == Phase::NYAH_ONE ||
+		PhaseManagerC::GetInstance()->getPhase() == Phase::INVALID_PHASE)
+		return;
+	
 	mCurrentTime += milliseconds;
-	if (PhaseManagerC::GetInstance()->getPhase() == Phase::NYAH_SEVEN)
+
+	if (mWaiting)
 	{
-		VELOCITY = VELOCITY_HARD;
-		TIME_BETWEEN_PATTERNS = TIME_BETWEEN_PATTERNS_HARD;
-	}
-	if (mCurrentTime - mLastSpawnTime > TIME_BETWEEN_WAVES)
-	{
-		mLastSpawnTime = mCurrentTime;
-		spawnBulletWave();
-	}
-	if (mCurrentTime - mLastSpeedIncreaseTime > INCREASE_SPAWN_SPEED_DELTA_TIME)
-	{
-		mLastSpeedIncreaseTime = mCurrentTime;
-		if (TIME_BETWEEN_RINGS >= 700)
+		if (mCurrentTime - mLastPatternUpdateTime > CGame::GetPresets().waitTime)
 		{
-			TIME_BETWEEN_RINGS -= 150;
-			VELOCITY--;
+			mLastPatternUpdateTime = mCurrentTime;
+			mWaiting = false;
+			LoadPattern();
+			mLastSpawnTime = mCurrentTime;
+			SpawnWave();
 		}
 	}
-	BulletWaveListT* currentBulletWave = topOfBulletWaveList;
-	while (currentBulletWave->nextBulletWave != NULL)
+	else
 	{
-		currentBulletWave->bulletWavePtr->update(milliseconds);
-		currentBulletWave = currentBulletWave->nextBulletWave;
-	}
-
-	if (topOfBulletWaveList->nextBulletWave != NULL)
-	{
-		if (topOfBulletWaveList->bulletWavePtr->getWaveAtCenter())
+		if (mCurrentTime - mLastSpawnTime > mCurrentWavePattern.GetWaveTime())
 		{
-			BulletWaveListT* temp = topOfBulletWaveList->nextBulletWave;
-			delete topOfBulletWaveList->bulletWavePtr;
-			free(topOfBulletWaveList);
-			topOfBulletWaveList = temp;
+			if (mWaveQueue.IsEmpty() && !mWaiting)
+			{
+				mWaiting = true;
+				mLastPatternUpdateTime = mCurrentTime;
+			}
+			if (!mWaiting)
+			{
+				mLastSpawnTime = mCurrentTime;
+				SpawnWave();
+			}
 		}
 	}
-}
 
-BulletWaveListT* BulletManagerC::getClosestBulletWave()
-{
-	return topOfBulletWaveList;
+	for (auto& bulletWave : mBulletWaves)
+	{
+		bulletWave.update(milliseconds, mVelocity);
+	}
+
+	if (!mBulletWaves.IsEmpty())
+	{
+		if (mBulletWaves.Front().getWaveAtCenter())
+		{
+			mBulletWaves.PopFront();
+		}
+	}
 }

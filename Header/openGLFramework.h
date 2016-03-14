@@ -25,13 +25,13 @@
 *                                                                                *
 *********************************************************************************/
 
-#ifndef GL_FRAMEWORK__INCLUDED
-#define GL_FRAMEWORK__INCLUDED
+//#ifndef GL_FRAMEWORK__INCLUDED
+//#define GL_FRAMEWORK__INCLUDED
 
-#include <windows.h>								// Header File For Windows
+//#include <windows.h>								// Header File For Windows
 
 typedef struct {									// Structure For Keyboard Stuff
-	BOOL keyDown [256];								// Holds TRUE / FALSE For Each Key
+	BOOL keyDown[256];								// Holds TRUE / FALSE For Each Key
 } Keys;												// Keys
 
 typedef struct {									// Contains Information Vital To Applications
@@ -60,31 +60,26 @@ typedef struct {									// Contains Information Vital To A Window
 
 
 
-void TerminateApplication (GL_Window* window);		// Terminate The Application
+void TerminateApplication(GL_Window* window);		// Terminate The Application
 
-void ToggleFullscreen (GL_Window* window);			// Toggle Fullscreen / Windowed Mode
+void ToggleFullscreen(GL_Window* window);			// Toggle Fullscreen / Windowed Mode
 
 void KeyReleased(GL_Window* window, WPARAM keyCode);				// Toggle Fullscreen / Windowed Mode
 
-// These Are The Function You Must Provide
-BOOL Initialize (GL_Window* window, Keys* keys);	// Performs All Your Initialization
+																	// These Are The Function You Must Provide
+BOOL Initialize(GL_Window* window, Keys* keys);	// Performs All Your Initialization
 
-void Deinitialize (void);							// Performs All Your DeInitialization
+void Deinitialize(void);							// Performs All Your DeInitialization
 
-void Update (DWORD milliseconds);					// Perform Motion Updates
+void Update(DWORD milliseconds);					// Perform Motion Updates
 
-void keyProcess(void);								// Perform Keyboard Processing
+
 
 void DrawScene(void);								// Perform All Your Scene Drawing
+
+void endOpenGLDrawing();
+void startOpenGLDrawing();
+void initOpenGLDrawing(GL_Window *window, Keys *keys, float backRed, float backGreen, float backBlue);
+
+
 //-----------------
-
-extern int mouse_x;
-extern int mouse_y;
-
-extern char appTitle[];								// Stores Program Title
-extern int screenInfo[3];							// Stores Screen Info (w,h,bpp)
-
-extern GL_Window*	g_window;
-extern Keys*		g_keys;
-
-#endif												// GL_FRAMEWORK__INCLUDED

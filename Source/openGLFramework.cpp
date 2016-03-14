@@ -1,13 +1,27 @@
-#include <windows.h>													// Header File For The Windows Library
-#include <stdio.h>
-#include <io.h>
-#include <fcntl.h>
-#include <gl/gl.h>														// Header File For The OpenGL32 Library
-#include <gl/glu.h>														// Header File For The GLu32 Library
-#include <gl\glut.h>
-#include "baseTypes.h"
-#include "openglframework.h"														// Header File For The NeHeGL Basecode
-#include "game.h"
+#include "pch.h"
+
+extern int mouse_x;
+extern int mouse_y;
+
+extern char appTitle[];								// Stores Program Title
+extern int screenInfo[3];							// Stores Screen Info (w,h,bpp)
+
+GL_Window*	g_window;
+Keys*		g_keys;
+
+//GL_Window*	g_window;
+//Keys*		g_keys;
+
+//void keyProcess(void);								// Perform Keyboard Processing
+
+//#endif												// GL_FRAMEWORK__INCLUDED
+
+
+#if defined(DEBUG) || defined(_DEBUG)
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
 
 #define WM_TOGGLEFULLSCREEN (WM_USER+1)									// Application Define Message For Toggling
 	
@@ -18,6 +32,10 @@
 // Between Fullscreen / Windowed Mode
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
+
+LARGE_INTEGER ticksPerSecond;
+LARGE_INTEGER startTime, endTime;
+DWORD elapsedTime;
 
 int	mouse_x, mouse_y;							                        // The Current Position Of The Mouse
 bool8_t mouse_r_button_down,mouse_l_button_down;
@@ -348,6 +366,9 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+#if defined(DEBUG) | defined(_DEBUG)
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     AllocConsole();
 
     HANDLE handle_out = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -405,8 +426,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	g_isProgramLooping = TRUE;											// Program Looping Is Set To TRUE
 	g_createFullScreen = window.init.isFullScreen;						// g_createFullScreen Is Set To User Default
+	QueryPerformanceFrequency(&ticksPerSecond);
+	//QueryPerformanceCounter(&endTime);
+	endTime.QuadPart = 0;
+	//elapsedTime = 0;
 	while (g_isProgramLooping)											// Loop Until WM_QUIT Is Received
 	{
+
 		// Create A Window
 		window.init.isFullScreen = g_createFullScreen;					// Set Init Param Of Window Creation To Fullscreen?
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
@@ -445,8 +471,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 						{
 							// Process Application Loop
 							tickCount = GetTickCount ();				// Get The Tick Count
+							//QueryPerformanceCounter(&startTime);
 							CGame::GetInstance()->UpdateFrame(tickCount - window.lastTickCount);	// Update The Counter
+							//CGame::GetInstance()->UpdateFrame((((float)startTime.QuadPart - (float)endTime.QuadPart) / (float)ticksPerSecond.QuadPart) * 1000.0f);
 							window.lastTickCount = tickCount;			// Set Last Count To Current Count
+							//QueryPerformanceCounter(&endTime);
+							//CGame::deltaTime = (((float)endTime.QuadPart - (float)startTime.QuadPart) / (float)ticksPerSecond.QuadPart) * 1000.0f;
+							//endTime.QuadPart = startTime.QuadPart;
 							CGame::GetInstance()->DrawScene();			// Draw Our Scene
 							SwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
 						}
@@ -470,3 +501,39 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()
+
+void initOpenGLDrawing(GL_Window *window, Keys *keys, float backRed, float backGreen, float backBlue)
+{
+	glClearColor(backRed, backGreen, backGreen, 0.0f);			// Background Color
+	glClearDepth(1.0f);											// Depth Buffer Setup
+	glDepthFunc(GL_LEQUAL);										// Type Of Depth Testing
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);			// Enable Alpha Blending
+	glEnable(GL_BLEND);											// Enable Blending
+	glEnable(GL_TEXTURE_2D);									// Enable Texture Mapping
+	glEnable(GL_CULL_FACE);										// Remove Back Face
+
+	g_window = window;
+	g_keys = keys;
+}
+void endOpenGLDrawing()
+{
+	glFlush();
+}
+
+void startOpenGLDrawing()
+{
+	// Clear the window
+	glClear(GL_COLOR_BUFFER_BIT);
+	// Set the modelview matrix to be the identity matrix
+	glLoadIdentity();
+}
+
+/*void keyProcess(void)
+{
+
+
+	if (g_keys->keyDown[VK_F1])									// Is F1 Being Pressed?
+	{
+		ToggleFullscreen(g_window);							// Toggle Fullscreen Mode
+	}
+}*/

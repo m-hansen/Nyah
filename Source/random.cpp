@@ -1,5 +1,5 @@
-#include <stdlib.h>
-#include "random.h"
+#include "pch.h"
+
 float getRangedRandom(float min, float max)
 {
     int r = rand();

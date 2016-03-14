@@ -1,8 +1,4 @@
-#include <assert.h>
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>	
-#include "SoundManager.h"
+#include "pch.h"
 
 SoundManagerC* SoundManagerC::sInstance = NULL;
 
@@ -15,12 +11,19 @@ SoundManagerC *SoundManagerC::CreateInstance()
 	return sInstance;
 }
 
+void SoundManagerC::update()
+{
+	m_pSystem->update();
+}
+
 void SoundManagerC::reset()
 {
 	releaseSound(bgm);
-	createSound(&bgm, "./Sounds/bgm_first.mp3");
+	createSound(&bgm, "./Sounds/bgm_easy.mp3");
 	releaseSound(bgm2);
 	createSound(&bgm2, "./Sounds/otis.mp3");
+	releaseSound(bgm3);
+	createSound(&bgm3, "./Sounds/bgm_hyper.mp3");
 }
 
 void SoundManagerC::shutdown()
@@ -47,8 +50,9 @@ void SoundManagerC::init()
 	m_pSystem->init(36, FMOD_INIT_NORMAL, NULL);
 
 	//create sound effects
-	createSound(&bgm, "./Sounds/bgm_first.mp3");
+	createSound(&bgm, "./Sounds/bgm_easy.mp3");
 	createSound(&bgm2, "./Sounds/otis.mp3");
+	createSound(&bgm3, "./Sounds/bgm_hyper.mp3");
 	createSound(&select, "./Sounds/hit.wav");
 }
 
@@ -78,12 +82,17 @@ void SoundManagerC::releaseSound(FMOD::Sound *pSound)
 
 void SoundManagerC::playBGM()
 {
-	playSound(bgm, false);
+	playSound(bgm, true);
 }
 
 void SoundManagerC::playBGM2()
 {
 	playSound(bgm2, true);
+}
+
+void SoundManagerC::playBGM3()
+{
+	playSound(bgm3, true);
 }
 
 void SoundManagerC::playSelectSFX()

@@ -1,24 +1,4 @@
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <math.h>												// Header File For Math Operations
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl/glut.h>
-#include "baseTypes.h"
-#include "ShapeDraw.h"
-#include "collInfo.h"
-#include "object.h"
-//#include "inputmapper.h"
-#include "SpriteManager.h"
-#include "bullet.h"
-#include "field.h"
-#include "fieldmanager.h"
-#include "gamedefs.h"
-#include "gameobjects.h"
-#include "random.h"
-#include "stateManager.h"
-#include "inputmanager.h"
+#include "pch.h"
 
 BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color, float_t theta)
 {
@@ -34,8 +14,8 @@ BulletC::BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t i
 	animState = GLOWING;
 	mCollRect.position.x = mPosition.x;
 	mCollRect.position.y = mPosition.y;
-	mCollRect.width = mRadius;
-	mCollRect.height = mRadius;
+	mCollRect.width = 2 * mRadius/3;
+	mCollRect.height = 2 * mRadius/3;
 }
 
 BulletC::BulletC()
@@ -55,21 +35,20 @@ BulletC::~BulletC()
 {
 };
 
-void BulletC::move(DWORD milliseconds)
+void BulletC::move(DWORD milliseconds, float_t velocity)
 {
 	if (animState == GLOWING)
 	{
-		float deltaTime = ((mCurrentTime + milliseconds) - mLastUpdateTime) / 1000.0f;
-		mPosition.x += mVelocity.x * deltaTime;
-		mPosition.y += mVelocity.y * deltaTime;
-		mCollRect.position.x = mPosition.x;
-		mCollRect.position.y = mPosition.y;
+		mPosition.x += mVelocity.x * velocity * (milliseconds/1000.0f);
+		mPosition.y += mVelocity.y * velocity * (milliseconds/1000.0f);
+		mCollRect.position.x = mPosition.x - mCollRect.width/2;
+		mCollRect.position.y = mPosition.y - mCollRect.height/2;
 	}
 }
 
-void BulletC::update(DWORD milliseconds)
+void BulletC::update(DWORD milliseconds, float_t velocity)
 {
-	move(milliseconds);
+	move(milliseconds, velocity);
 	doCollisions();
 	updateAnimationFrame(milliseconds);
 }
@@ -96,7 +75,14 @@ void BulletC::render()
 	GLfloat right = mPosition.x + (mRadius * 2.0f);
 	GLfloat top = mPosition.y;
 	GLfloat bottom = mPosition.y + (mRadius * 2.0f);
+
+	GLfloat cleft = mCollRect.position.x;
+	GLfloat cright = mCollRect.position.x + mCollRect.width;
+	GLfloat ctop = mCollRect.position.y + mCollRect.height;
+	GLfloat cbottom = mCollRect.position.y;
+
 	SpriteManagerC::GetInstance()->renderBullet(animState, mColor, animationFrameNo, left, right, top, bottom, mRadius);
+	//SpriteManagerC::GetInstance()->renderCollisionRect(cleft, cbottom, cright, ctop, false);
 }
 
 void BulletC::updateAnimationFrame(DWORD milliseconds)

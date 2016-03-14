@@ -1,20 +1,4 @@
-#include <stdlib.h>
-#include <gl/glut.h>
-#include <gl/gl.h>
-#include <gl/glu.h>
-#include <Windows.h>
-#include <math.h>
-#include "baseTypes.h"
-#include "collInfo.h"
-#include "Object.h"
-#include "SpriteManager.h"
-#include "InputManager.h"
-#include "CollisionHandler.h"
-#include "BulletManager.h"
-#include "BulletWave.h"
-#include "Bullet.h"
-#include "StateManager.h"
-#include "Player.h"
+#include "pch.h"
 
 PlayerC *PlayerC::sInstance = NULL;
 
@@ -40,8 +24,8 @@ void PlayerC::init()
 	rotateAnimationDirection = 1;
 	mCollRect.position.x = mPosition.x;
 	mCollRect.position.y = mPosition.y;
-	mCollRect.width = PLAYER_WIDTH;
-	mCollRect.height = PLAYER_HEIGHT;
+	mCollRect.width = 3 * PLAYER_WIDTH/4;
+	mCollRect.height = 3 * PLAYER_HEIGHT/4;
 	bulletManagerInstance = BulletManagerC::GetInstance();
 }
 
@@ -52,7 +36,7 @@ void PlayerC::update(DWORD milliseconds)
 	if (InputManagerC::GetInstance()->GetClockwiseRotationButton())
 	{
 		// Rotate the player clockwise
-		mAngle += ANGLE_INCREMENT;
+		mAngle += ANGLE_INCREMENT * (milliseconds/1000.0f);
 		move(milliseconds);
 		rotateAnimationDirection = 1;
 		animationFrameNo += rotateAnimationDirection;
@@ -65,7 +49,7 @@ void PlayerC::update(DWORD milliseconds)
 	if (InputManagerC::GetInstance()->GetCounterClockwiseRotationButton())
 	{
 		// Rotate the player counter-clockwise
-		mAngle -= ANGLE_INCREMENT;
+		mAngle -= ANGLE_INCREMENT * (milliseconds/1000.0f);
 		move(milliseconds);
 		rotateAnimationDirection = -1;
 		animationFrameNo += rotateAnimationDirection;
@@ -81,44 +65,31 @@ void PlayerC::update(DWORD milliseconds)
 // Check to see if the player has collided with an object
 void PlayerC::checkForCollision()
 {
-	// Get a pointer to each bullet wave
-	BulletWaveListT* bulletWaves = bulletManagerInstance->getClosestBulletWave();
-	if (!bulletManagerInstance->getHasStartedSpawning())
+	for (auto& bulletWave : bulletManagerInstance->getBulletWaves())
 	{
-		return;
-	}
-
-	// Iterate over each bullet wave, starting with the closest wave
-	while (bulletWaves->nextBulletWave != NULL)
-	{
-		BulletListT* topOfBulletList = bulletWaves->bulletWavePtr->getTopOfBulletList();
-
-		while (topOfBulletList->nextBullet != NULL)
+		for (auto& bullet : bulletWave.getBullets())
 		{
-			// Iterate over each bullet in the wave
-			BulletC* bullet = topOfBulletList->bulletPtr;
-			bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet->getCollisionRectangle());
-			if (isGameOver)
+			if (!bullet.getIsAtCenter())
 			{
-				// Player collided with bullet, end game
-				StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
-				return;
+				bool isGameOver = CollisionHandlerC::GetInstance()->CollisionOccuredRect(&mCollRect, bullet.getCollisionRectangle());
+				if (isGameOver)
+				{
+					// Player collided with bullet, end game
+					StateManagerC::GetInstance()->setState(StateManagerC::GAMEOVER);
+					return;
+				}
 			}
-
-			topOfBulletList = topOfBulletList->nextBullet;
 		}
-
-		bulletWaves = bulletWaves->nextBulletWave;
 	}
 }
 
 // Move the player in a circle, update its collider position
 void PlayerC::move(DWORD milliseconds)
 {
-	mPosition.x = mOrigin.x + sin(mAngle) * mRadius;
-	mPosition.y = mOrigin.y + cos(mAngle) * mRadius;
-	mCollRect.position.x = mPosition.x;
-	mCollRect.position.y = mPosition.y;
+	mPosition.x = sin(mAngle) * mRadius;
+	mPosition.y = cos(mAngle) * mRadius;
+	mCollRect.position.x = mPosition.x - mCollRect.width/2;
+	mCollRect.position.y = mPosition.y - mCollRect.height/2;
 }
 
 // Render the player sprite
@@ -129,7 +100,13 @@ void PlayerC::render()
 	GLfloat top = mPosition.y - mOrigin.y;
 	GLfloat bottom = mPosition.y + mOrigin.y;
 
-	SpriteManagerC::GetInstance()->renderPlayer(animationFrameNo, left - PLAYER_WIDTH/2, right - PLAYER_WIDTH/2, top - PLAYER_HEIGHT/2, bottom - PLAYER_HEIGHT/2);
+	GLfloat cleft = mCollRect.position.x;
+	GLfloat cright = mCollRect.position.x + mCollRect.width;
+	GLfloat ctop = mCollRect.position.y + mCollRect.height;
+	GLfloat cbottom = mCollRect.position.y;
+
+	SpriteManagerC::GetInstance()->renderPlayer(animationFrameNo, left, right, top, bottom);
+	//SpriteManagerC::GetInstance()->renderCollisionRect(cleft, cbottom, cright, ctop, true);
 }
 
 // Return the player's collision rectangle

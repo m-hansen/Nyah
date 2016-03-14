@@ -1,10 +1,8 @@
-#include <windows.h>											// Header File For Windows
-#include <gl/gl.h>														// Header File For The OpenGL32 Library
-#include <gl/glu.h>														// Header File For The GLu32 Library
-#include <gl/glut.h>
-#include "openglframework.h"
-#include "baseTypes.h"
-#include "InputManager.h"
+#include "pch.h"
+
+extern GL_Window*	g_window;
+extern Keys*		g_keys;
+
 InputManagerC* InputManagerC::sInstance = NULL;
 
 InputManagerC *InputManagerC::CreateInstance()
@@ -16,11 +14,12 @@ InputManagerC *InputManagerC::CreateInstance()
 	return sInstance;
 }
 
+
 bool8_t InputManagerC::GetStartButton()
 {
-	if (g_keys->keyDown[VK_SPACE])
+	if (g_keys->keyDown[VK_RETURN])
 	{
-		//KeyReleased(g_window, VK_SPACE);
+		g_keys->keyDown[VK_RETURN] = FALSE;
 		return true;
 	}
 	return false;
@@ -30,7 +29,17 @@ bool8_t InputManagerC::GetResetButton()
 {
 	if (g_keys->keyDown[VK_RETURN])
 	{
-		//KeyReleased(g_window, VK_RETURN);
+		g_keys->keyDown[VK_RETURN] = FALSE;
+		return true;
+	}
+	return false;
+}
+
+bool8_t InputManagerC::GetDifficultyButton()
+{
+	if (g_keys->keyDown[VK_SPACE])
+	{
+		g_keys->keyDown[VK_SPACE] = FALSE;
 		return true;
 	}
 	return false;
@@ -70,4 +79,18 @@ bool8_t InputManagerC::DebugPlayerKill()
 		return true;
 	}
 	return false;
+}
+
+bool8_t InputManagerC::QuitPressed()
+{
+	if (g_keys->keyDown[VK_ESCAPE])								// Is ESC Being Pressed?
+	{
+		return true;						// Terminate The Program
+	}
+	return false;
+}
+
+void InputManagerC::QuitGame()
+{
+	TerminateApplication(g_window);
 }
