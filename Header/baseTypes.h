@@ -1,3 +1,6 @@
+#pragma once
+#include <string>
+
 typedef float float_t;
 typedef unsigned int uint32_t;
 typedef int int32_t;
@@ -40,11 +43,24 @@ enum Phase {
 	MAX_PHASE
 };
 
+typedef struct
+{
+	uint32_t score;
+	std::string name;
+} HighScoreEntry;
+
 typedef struct 
 {
     float x;
     float y;
 } Coord2D; 
+
+typedef struct
+{
+	float red;
+	float green;
+	float blue;
+} GLColor;
 
 typedef struct 
 {

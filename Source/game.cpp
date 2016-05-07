@@ -135,20 +135,23 @@ void CGame::DrawScene(void)
 
 	// Render, regardless of state
 	SpriteManagerC::GetInstance()->renderBackground();
+
+	UIManagerC* uiManagerInstance = UIManagerC::GetInstance();
 	
 	switch (StateManagerC::GetInstance()->getState())
 	{
 		case StateManagerC::TITLE:
-			UIManagerC::GetInstance()->renderLogo();
+			uiManagerInstance->renderLogo();
 			break;
 		case StateManagerC::PLAYING:
 			BulletManagerC::GetInstance()->renderSprites();
 			PlayerC::GetInstance()->render();
-			UIManagerC::GetInstance()->renderScore();
+			uiManagerInstance->renderScore();
 			break;
 		case StateManagerC::GAMEOVER:
-			UIManagerC::GetInstance()->renderGameOver();
-			UIManagerC::GetInstance()->renderScore();
+			uiManagerInstance->renderGameOver();
+			uiManagerInstance->renderScore();
+			uiManagerInstance->renderHighScores();
 			break;
 	}
 }
@@ -175,5 +178,6 @@ void CGame::DestroyGame(void)
 	delete InputManagerC::GetInstance();
 	delete SoundManagerC::GetInstance();
 	delete PhaseManagerC::GetInstance();
+	delete HighScoresC::GetInstance();
 	delete UIManagerC::GetInstance();
 }

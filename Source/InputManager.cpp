@@ -54,6 +54,24 @@ bool8_t InputManagerC::GetCounterClockwiseRotationButton()
 	return false;
 }
 
+bool8_t InputManagerC::GetUpButton()
+{
+	if (g_keys->keyDown[VK_UP])
+	{
+		return true;
+	}
+	return false;
+}
+
+bool8_t InputManagerC::GetDownButton()
+{
+	if (g_keys->keyDown[VK_DOWN])
+	{
+		return true;
+	}
+	return false;
+}
+
 bool8_t InputManagerC::GetBackButton()
 {
 	if (g_keys->keyDown[VK_BACK])
