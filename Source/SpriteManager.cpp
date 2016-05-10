@@ -1,21 +1,4 @@
-#define STATE_MANAGER_CPP
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <string>
-#include <math.h>												// Header File For Math Operations
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl\glut.h>
-#include <assert.h>
-#include "baseTypes.h"
-#include "openglframework.h"	
-#include "gamedefs.h"
-#include "spriteManager.h"
-#include "PhaseManager.h"
-#include "random.h"
-
-#include "soil.h"
+#include "pch.h"
 
 SpriteManagerC* SpriteManagerC::sInstance=NULL;
 
@@ -45,6 +28,7 @@ void SpriteManagerC::init()
 	colorDelta = 1;
 	angle = 0;
 	rotationDirection = 1;
+	pulse = 1.0f;
 }
 
 GLuint SpriteManagerC::loadTexture(char8_t* fileToLoad)
@@ -58,9 +42,9 @@ GLuint SpriteManagerC::loadTexture(char8_t* fileToLoad)
 void SpriteManagerC::update(DWORD milliseconds)
 {
 	mCurrentTime += milliseconds;
-
 	if (mCurrentTime - mLastColorUpdateTime > COLOR_UPDATE_DELTA_TIME)
 	{
+		rotationSpeed = CGame::GetPresets().rotSpeed;
 		mLastColorUpdateTime = mCurrentTime;
 		if (colorStep == 0)
 		{
@@ -81,24 +65,23 @@ void SpriteManagerC::update(DWORD milliseconds)
 			rotationDirection *= -1;
 		}
 
-		float_t rotationSpeed = 0.0f;
+		//float_t rotationSpeed = 0.0f;
 		switch (PhaseManagerC::GetInstance()->getPhase())
 		{
-			case Phase::NYAH_TWO:
-				rotationSpeed = ROT_SPEED_SLOW;
-				break;
-			case Phase::NYAH_THREE:
-			case Phase::NYAH_FOUR:
-				rotationSpeed = ROT_SPEED_MEDIUM;
-				break;
-			case Phase::NYAH_SEVEN:
-				rotationSpeed = ROT_SPEED_FAST;
-				break;
+		case Phase::NYAH_TWO:
+			break;
+		case Phase::NYAH_THREE:
+			rotationSpeed = CGame::GetPresets().rotSpeed + 0.2f;
+			break;
+		case Phase::NYAH_FOUR:
+			rotationSpeed = CGame::GetPresets().rotSpeed + 0.4f;
+			break;
+		case Phase::NYAH_FIVE:
+			rotationSpeed = CGame::GetPresets().rotSpeed + 0.6f;
+			break;
 		}
-
 		angle += rotationDirection * rotationSpeed;
 	}
-
 }
 
 void SpriteManagerC::renderBackground()
@@ -117,21 +100,29 @@ void SpriteManagerC::renderBackground()
 	quad.yTop = -2048.0f;
 	quad.yBottom = 2048.0f;
 
-	//Set color
-	if ((int32_t)PhaseManagerC::GetInstance()->getPhase() >= (int32_t)Phase::NYAH_SIX)
+	switch (CGame::GetMode())
 	{
-		quad.r = 0xFF;
-		quad.g = 0x00;
-		quad.b = 0x00;
-		quad.a = 0xFF;
-	}
-	else
-	{
+	case DifficultyMode::EASY:
 		quad.r = 0x00;
-		quad.g = 0xFF - colorStep;
+		quad.g = 0xFF;
 		quad.b = colorStep;
 		quad.a = 0xFF;
+		break;
+	case DifficultyMode::MEDIUM:
+		quad.r = colorStep;
+		quad.g = 0x00;
+		quad.b = 0xFF;
+		quad.a = 0xFF;
+		break;
+	case DifficultyMode::HARD:
+		quad.r = 0xFF;
+		quad.g = colorStep;
+		quad.b = 0x00;
+		quad.a = 0xFF;
+		break;
+
 	}
+
 
 	OGL_Render2(quad, mBackgroundTexture);
 }
@@ -140,7 +131,9 @@ void SpriteManagerC::renderBullet(BulletAnimationState state, BulletColor color,
 {
 	struct RenderData quad;
 
-	GLfloat u, v;
+	GLfloat u = 0.0f;
+	GLfloat v = 0.0f;
+
 	u = animationFrameNo * (1.0 / 8.0);
 	if (color == RED)
 	{
@@ -211,6 +204,28 @@ void SpriteManagerC::renderPlayer(int32_t animationFrameNo, GLfloat left, GLfloa
 	quad.a = 0xFF;
 
 	OGL_Render(quad, mPlayerSpriteTexture);
+}
+
+void SpriteManagerC::renderCollisionRect(GLfloat left, GLfloat bottom, GLfloat right, GLfloat top, bool8_t player)
+{
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);              // Each set of 4 vertices form a quad
+	if(player)
+		glColor3f(0.0f, 0.0f, 1.0f); // Red
+	else
+		glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(right, top);     // Define vertices in counter-clockwise (CCW) order
+	glVertex2f(left, top);     //  so that the normal (front-face) is facing you
+	glVertex2f(left, bottom);
+	glVertex2f(right, bottom);
+	glEnd();
+
+
+	glFlush();
+	glPopMatrix();
+	glEnable(GL_TEXTURE_2D);
 }
 
 void SpriteManagerC::OGL_Render(struct RenderData quad, GLuint textureID)

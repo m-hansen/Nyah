@@ -1,13 +1,14 @@
+class ObjectC;
 class BulletC : public ObjectC
 {
 public:
 	BulletC();
 	BulletC(float_t initPosX, float_t initPosY, float_t initVelX, float_t initVelY, float_t radius, BulletColor color, float_t theta);
 	~BulletC();
-	void update(DWORD milliseconds);
+	void update(DWORD milliseconds, float_t velocity);
 	virtual void render();
 	void doCollisions();
-	void move(DWORD milliseconds);
+	void move(DWORD milliseconds, float_t velocity);
 	void updateAnimationFrame(DWORD milliseconds);
 	CollisionRectangle* getCollisionRectangle();
 	bool8_t getIsAtCenter();
@@ -27,4 +28,4 @@ private:
 	DWORD mCurrentTime;
 };
 #define ANIMATION_FRAME_UPDATE_DELTA_TIME 100
-#define THRESHOLD 10.0
+#define THRESHOLD 75.0

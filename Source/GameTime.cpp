@@ -1,6 +1,4 @@
-#include <windows.h>
-#include "baseTypes.h"
-#include "GameTime.h"
+#include "pch.h"
 
 GameTimeC* GameTimeC::sInstance = NULL;
 

@@ -1,20 +1,4 @@
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <math.h>												// Header File For Math Operations
-#include <gl/gl.h>												// Header File For The OpenGL32 Library
-#include <gl/glu.h>												// Header File For The GLu32 Library
-#include <gl/glut.h>
-#include <assert.h>
-#include "baseTypes.h"
-#include "openglframework.h"	
-#include "gamedefs.h"
-#include "PhaseManager.h"
-#include "GameTime.h"
-#include "random.h"
-#include "soil.h"
-#include "HighScores.h"
-#include "UIManager.h"
+#include "pch.h"
 
 UIManagerC* UIManagerC::sInstance = NULL;
 
@@ -27,10 +11,12 @@ UIManagerC *UIManagerC::CreateInstance()
 
 void UIManagerC::init()
 {
-	strcpy_s(title, "NYAH");
-	strcpy_s(startPrompt, "PRESS SPACE TO PLAY");
-	strcpy_s(gameOverText, "Game Over");
-	strcpy_s(restartPrompt, "Press ENTER to restart");
+	title = "NYAH";
+	startPrompt = "Press ENTER to Play";
+	gameOver = "GAME OVER";
+	restartPrompt = "Press ENTER to restart";
+	difficultyPrompt = "Press SPACE to change difficulty";
+	back = "Press SPACE to return to title screen";
 	mCachedPhaseManager = PhaseManagerC::GetInstance();
 }
 
@@ -58,7 +44,14 @@ void UIManagerC::renderScore()
 
 void UIManagerC::renderLogo()
 {
-	int32_t lengthOfString = (int32_t)strlen(title);
+	switch (CGame::GetMode())
+	{
+		case DifficultyMode::EASY: difficulty = "NORMAL"; break;
+		case DifficultyMode::MEDIUM: difficulty = "HYPER"; break;
+		case DifficultyMode::HARD: difficulty = "NYAHHHH"; break;
+	}
+
+	int32_t lengthOfString = title.size();
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
@@ -75,7 +68,7 @@ void UIManagerC::renderLogo()
 
 	// Start prompt
 	glPushMatrix();
-	lengthOfString = (int32_t)strlen(startPrompt);
+	lengthOfString = startPrompt.size();
 	glTranslatef(-(lengthOfString * 52), -500.0f, 0.0f);
 	for (int32_t i = 0; i < lengthOfString; ++i)
 	{
@@ -83,34 +76,66 @@ void UIManagerC::renderLogo()
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, startPrompt[i]);
 	}
 	glPopMatrix();
+
+	// Difficulty Prompt
+	glPushMatrix();
+	lengthOfString = difficultyPrompt.size();
+	glTranslatef(-(lengthOfString * 52), -1300.0f, 0.0f);
+	for (int i = 0; i < lengthOfString; i++)
+	{
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, difficultyPrompt[i]);
+	}
+	glPopMatrix();
+
+	// Difficulty Mode
+	glPushMatrix();
+	lengthOfString = difficulty.size();
+	glTranslatef(-(lengthOfString * 52), -1600.0f, 0.0f);
+	for (int i = 0; i < lengthOfString; i++)
+	{
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, difficulty[i]);
+	}
+	glPopMatrix();
 	glEnable(GL_TEXTURE_2D);
 }
 
 void UIManagerC::renderGameOver()
 {
-	int32_t lengthOfString = (int32_t)strlen(gameOverText);
+	int32_t lengthOfString = gameOver.size();
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
 	// Game over text
 	glPushMatrix();
-	glScalef(4.0f, 4.0f, 4.0f);
+	glScalef(3.0f, 3.0f, 3.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
-
 	glTranslatef(-(lengthOfString * 52), 200.0f, 0.0f);
-	for (int32_t i = 0; i < lengthOfString; ++i)
-	{
-		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, gameOverText[i]);
+	for (int i = 0; i < lengthOfString; ++i)
+	{		
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, gameOver[i]);
 	}
 	glPopMatrix();
 	
 	// Restart prompt
 	glPushMatrix();
-	lengthOfString = (int32_t)strlen(restartPrompt);
+	lengthOfString = restartPrompt.size();
 	glTranslatef(-(lengthOfString * 52), -1500.0f, 0.0f);
-	for (int32_t i = 0; i < lengthOfString; ++i)
+	for (int i = 0; i < lengthOfString; ++i)
 	{
 		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, restartPrompt[i]);
+	}
+	glPopMatrix();
+
+	// Title Screen prompt
+	glPushMatrix();
+	lengthOfString = back.size();
+	glTranslatef(-(lengthOfString * 52), -1200.0f, 0.0f);
+	for (int i = 0; i < lengthOfString; i++)
+	{
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, back[i]);
 	}
 	glPopMatrix();
 

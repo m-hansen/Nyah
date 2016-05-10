@@ -1,39 +1,38 @@
-#define GAME_CPP
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>												// Header File For Variable Argument Routines
-#include <math.h>												// Header File For Math Operations
-#include <gl/gl.h>												// Header File For The OpenGL32 Library
-#include <gl/glu.h>												// Header File For The GLu32 Library
-#include <gl/glut.h>
-#include "baseTypes.h"
-#include "openglframework.h"	
-#include "gamedefs.h"
-#include "collInfo.h"
-#include "object.h"
-#include "ball.h"
-#include "field.h"
-#include "random.h"
-#include "gameObjects.h"
-#include "openGLStuff.h"
-#include "game.h"
-#include "StateManager.h"
-#include "BallManager.h"
-#include "FieldManager.h"
-#include "InputManager.h"
-#include "SpriteManager.h"
-#include "BulletManager.h"
-#include "UIManager.h"
-#include "SoundManager.h"
-#include "CollisionHandler.h"
-#include "PhaseManager.h"
-#include "GameTime.h"
-#include "HighScores.h"
-#include "Player.h"
+#include "pch.h"
 
 // Declarations
 const char8_t CGame::mGameTitle[]="Nyah";
 CGame* CGame::sInstance=NULL;
+DifficultyMode CGame::mMode;
+HashMap<DifficultyMode, DifficultyPresets> CGame::presets;
+
+void CGame::initDifficultyPresets()
+{
+	DifficultyPresets easy;
+	easy.velocity = sVelocityEasy;
+	easy.start = static_cast<int>(EASY_BEGIN) + 1;
+	easy.end = static_cast<int>(EASY_END);
+	easy.rotSpeed = sRotSpeedEasy;
+	easy.waitTime = sWaitTimeEasy;
+	presets.Insert(std::pair<DifficultyMode, DifficultyPresets>(DifficultyMode::EASY, easy));
+
+	DifficultyPresets medium;
+	medium.velocity = sVelocityMedium;
+	medium.start = static_cast<int>(MEDIUM_BEGIN) + 1;
+	medium.end = static_cast<int>(MEDIUM_END);
+	medium.rotSpeed = sRotSpeedMedium;
+	medium.waitTime = sWaitTimeMedium;
+	presets.Insert(std::pair<DifficultyMode, DifficultyPresets>(DifficultyMode::MEDIUM, medium));
+
+	DifficultyPresets hard;
+	hard.velocity = sVelocityHard;
+	hard.start = static_cast<int>(HARD_BEGIN) + 1;
+	hard.end = static_cast<int>(HARD_END);
+	hard.rotSpeed = sRotSpeedHard;
+	hard.waitTime = sWaitTimeHard;
+	presets.Insert(std::pair<DifficultyMode, DifficultyPresets>(DifficultyMode::HARD, hard));
+}
+
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any OpenGL Initialization Goes Here
 {
 	initOpenGLDrawing(window, keys, 0.0f, 0.0f, 0.0f);
@@ -44,6 +43,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any OpenGL Initialization
 
 void CGame::init()
 {
+	initDifficultyPresets();
+	CGame::SetMode(DifficultyMode::EASY);
+
 	StateManagerC::CreateInstance();
 	InputManagerC::CreateInstance();
 	SpriteManagerC::CreateInstance();
@@ -86,15 +88,24 @@ void CGame::reset()
 
 	// Start timers and music
 	GameTimeC::GetInstance()->start();
-	SoundManagerC::GetInstance()->playBGM();
+	switch (CGame::GetMode())
+	{
+	case DifficultyMode::EASY: SoundManagerC::GetInstance()->playBGM(); break;
+	case DifficultyMode::MEDIUM: SoundManagerC::GetInstance()->playBGM3(); break;
+	case DifficultyMode::HARD: SoundManagerC::GetInstance()->playBGM2(); break;
+	}
+	
 }
 
 void CGame::UpdateFrame(DWORD milliseconds)			
 {
-	keyProcess();
-
 	// Update frame, regardless of state
+	SoundManagerC::GetInstance()->update();
 	SpriteManagerC::GetInstance()->update(milliseconds);
+	if (InputManagerC::GetInstance()->QuitPressed())
+	{
+		InputManagerC::GetInstance()->QuitGame();
+	}
 	
 	switch (StateManagerC::GetInstance()->getState())
 	{
@@ -102,6 +113,14 @@ void CGame::UpdateFrame(DWORD milliseconds)
 			if (InputManagerC::GetInstance()->GetStartButton())
 			{
 				CGame::GetInstance()->reset();
+				SoundManagerC::GetInstance()->playSelectSFX();
+			}
+			if (InputManagerC::GetInstance()->GetDifficultyButton())
+			{
+				uint32_t modeNum = static_cast<uint32_t>(CGame::GetMode()) + 1;
+				if (modeNum > 2)
+					modeNum = 0;
+				CGame::SetMode(static_cast<DifficultyMode>(modeNum));
 				SoundManagerC::GetInstance()->playSelectSFX();
 			}
 			break;
@@ -118,10 +137,13 @@ void CGame::UpdateFrame(DWORD milliseconds)
 		case StateManagerC::GAMEOVER:
 			if (InputManagerC::GetInstance()->GetResetButton())
 			{
+				SoundManagerC::GetInstance()->playSelectSFX();
 				CGame::GetInstance()->reset();
 			}
-			if (InputManagerC::GetInstance()->GetBackButton())
+			if (InputManagerC::GetInstance()->GetDifficultyButton())
 			{
+				SoundManagerC::GetInstance()->playSelectSFX();
+				SoundManagerC::GetInstance()->reset();
 				StateManagerC::GetInstance()->setState(StateManagerC::TITLE);
 			}
 			break;
@@ -180,4 +202,7 @@ void CGame::DestroyGame(void)
 	delete PhaseManagerC::GetInstance();
 	delete HighScoresC::GetInstance();
 	delete UIManagerC::GetInstance();
+	delete GameTimeC::GetInstance();
+	delete CollisionHandlerC::GetInstance();
+	delete CGame::GetInstance();
 }

@@ -1,6 +1,4 @@
-#include "baseTypes.h"
-#include "collInfo.h"
-#include "Object.h"
+#include "pch.h"
 
 ObjectC::ObjectC(float initPosX, float initPosY, float initVelX, float initVelY)
 {

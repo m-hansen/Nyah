@@ -1,22 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Source\ball.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BallManager.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Bullet.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\BulletManager.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\field.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FieldManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\game.cpp">
@@ -38,9 +26,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\random.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ShapeDraw.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\SpriteManager.cpp">
@@ -70,17 +55,17 @@
     <ClCompile Include="Source\PhaseManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="HighScores.cpp">
+    <ClCompile Include="Source\HighScores.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WavePattern.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header\ball.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\BallManager.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="Header\baseTypes.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -91,12 +76,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\collInfo.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\field.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\FieldManager.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\game.h">
@@ -124,9 +103,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Header\random.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\ShapeDraw.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="lib\SOIL.h">
@@ -162,7 +138,28 @@
     <ClInclude Include="Header\PhaseManager.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="HighScores.h">
+    <ClInclude Include="Header\HighScores.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\SList.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\DifficultyPreset.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\HashMap.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\pch.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Queue.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\vector.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\WavePattern.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -173,5 +170,19 @@
     <Filter Include="Header">
       <UniqueIdentifier>{85a8b2fd-262f-44dc-8238-9fdff204fc8f}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Header\SList.inl">
+      <Filter>Header</Filter>
+    </None>
+    <None Include="Header\HashMap.inl">
+      <Filter>Header</Filter>
+    </None>
+    <None Include="Header\Queue.inl">
+      <Filter>Header</Filter>
+    </None>
+    <None Include="Header\vector.inl">
+      <Filter>Header</Filter>
+    </None>
   </ItemGroup>
 </Project>

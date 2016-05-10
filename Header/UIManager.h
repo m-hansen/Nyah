@@ -23,9 +23,13 @@ private:
 	static UIManagerC *sInstance;
 	UIManagerC() {};
 
-	char8_t title[SMALL_BUFFER];
-	char8_t startPrompt[MEDIUM_BUFFER];
-	char8_t gameOverText[MEDIUM_BUFFER];
-	char8_t restartPrompt[MEDIUM_BUFFER];
+	std::string title;
+	std::string difficulty;
+	std::string startPrompt;
+	std::string difficultyPrompt;
+	std::string restartPrompt;
+	std::string gameOver;
+	std::string back;
+
 	PhaseManagerC* mCachedPhaseManager;
 };
